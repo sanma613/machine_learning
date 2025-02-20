@@ -16,9 +16,9 @@ class TestClustering(unittest.TestCase):
         # Setup test data: 3 países, k = 2
         dataset = pd.DataFrame(
             {
-                "PIB_per_capita": [30000, 25000, 40000],
-                "Esperanza_de_vida": [78, 75, 82],
-                "Tasa_alfabetizacion": [95, 90, 98],
+                "GDP_per_capita": [30000, 25000, 40000],
+                "life_expectancy": [78, 75, 82],
+                "literacy_rate": [95, 90, 98],
             }
         )
         num_centroids = 2
@@ -33,9 +33,9 @@ class TestClustering(unittest.TestCase):
         # Setup test data: 5 países, k = 3
         dataset = pd.DataFrame(
             {
-                "PIB_per_capita": [30000, 25000, 40000, 32000, 28000],
-                "Esperanza_de_vida": [78, 75, 82, 80, 76],
-                "Tasa_alfabetizacion": [95, 90, 98, 96, 92],
+                "GDP_per_capita": [30000, 25000, 40000, 32000, 28000],
+                "life_expectancy": [78, 75, 82, 80, 76],
+                "literacy_rate": [95, 90, 98, 96, 92],
             }
         )
         num_centroids = 3
@@ -47,9 +47,9 @@ class TestClustering(unittest.TestCase):
         # Setup test data: 4 países, k = 4 (cada país en un cluster único)
         dataset = pd.DataFrame(
             {
-                "PIB_per_capita": [30000, 25000, 40000, 35000],
-                "Esperanza_de_vida": [78, 75, 82, 79],
-                "Tasa_alfabetizacion": [95, 90, 98, 94],
+                "GDP_per_capita": [30000, 25000, 40000, 35000],
+                "life_expectancy": [78, 75, 82, 79],
+                "literacy_rate": [95, 90, 98, 94],
             }
         )
         num_centroids = 4
@@ -64,9 +64,9 @@ class TestClustering(unittest.TestCase):
         # Setup test data: datos con NaN, que deben limpiarse
         dataset = pd.DataFrame(
             {
-                "PIB_per_capita": [30000, np.nan, 40000],
-                "Esperanza_de_vida": [78, 75, 82],
-                "Tasa_alfabetizacion": [95, 90, 98],
+                "GDP_per_capita": [30000, np.nan, 40000],
+                "life_expectancy": [78, 75, 82],
+                "literacy_rate": [95, 90, 98],
             }
         )
         num_centroids = 2
@@ -82,9 +82,9 @@ class TestClustering(unittest.TestCase):
         # Setup test data: datos con un outlier
         dataset = pd.DataFrame(
             {
-                "PIB_per_capita": [30000, 25000, 1000000],
-                "Esperanza_de_vida": [78, 75, 82],
-                "Tasa_alfabetizacion": [95, 90, 98],
+                "GDP_per_capita": [30000, 25000, 1000000],
+                "life_expectancy": [78, 75, 82],
+                "literacy_rate": [95, 90, 98],
             }
         )
         num_centroids = 2
@@ -94,7 +94,7 @@ class TestClustering(unittest.TestCase):
 
         # Verificamos que el outlier (1000000) se aísle en su propio cluster
         outlier_cluster = result.loc[
-            dataset["PIB_per_capita"] == 1000000, "cluster"
+            dataset["GDP_per_capita"] == 1000000, "cluster"
         ].iloc[0]
         self.assertEqual((result["cluster"] == outlier_cluster).sum(), 1)
 
@@ -102,9 +102,9 @@ class TestClustering(unittest.TestCase):
         # Setup test data: datos con entradas duplicadas
         dataset = pd.DataFrame(
             {
-                "PIB_per_capita": [30000, 30000, 40000, 40000],
-                "Esperanza_de_vida": [78, 78, 82, 82],
-                "Tasa_alfabetizacion": [95, 95, 98, 98],
+                "GDP_per_capita": [30000, 30000, 40000, 40000],
+                "life_expectancy": [78, 78, 82, 82],
+                "literacy_rate": [95, 95, 98, 98],
             }
         )
         num_centroids = 2
@@ -113,8 +113,8 @@ class TestClustering(unittest.TestCase):
         self.assertEqual(result["cluster"].nunique(), 2)
 
         # Verificamos que las filas duplicadas se asignen al mismo cluster
-        group1 = result[result["PIB_per_capita"] == 30000]
-        group2 = result[result["PIB_per_capita"] == 40000]
+        group1 = result[result["GDP_per_capita"] == 30000]
+        group2 = result[result["GDP_per_capita"] == 40000]
         self.assertEqual(group1["cluster"].nunique(), 1)
         self.assertEqual(group2["cluster"].nunique(), 1)
 
