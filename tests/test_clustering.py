@@ -8,6 +8,11 @@ import pandas as pd
 import numpy as np
 
 from src.app import k_means_logic
+from src.errors.app_error import (
+    EmptyDatasetError,
+    ZeroCentroidsError,
+    MoreCentroidsError,
+)
 
 
 class TestClustering(unittest.TestCase):
@@ -238,14 +243,46 @@ class TestClustering(unittest.TestCase):
         )
 
         self.assertEqual(updated_dataset["assigned_cluster"].nunique(), num_centroids)
-        group1 = updated_dataset[
-            updated_dataset["GDP_per_capita"] == 0.0
-        ]  # Normalized value for 30000
-        group2 = updated_dataset[
-            updated_dataset["GDP_per_capita"] == 1.0
-        ]  # Normalized value for 40000
+        group1 = updated_dataset[updated_dataset["GDP_per_capita"] == 0.0]
+        group2 = updated_dataset[updated_dataset["GDP_per_capita"] == 1.0]
         self.assertEqual(group1["assigned_cluster"].nunique(), 1)
         self.assertEqual(group2["assigned_cluster"].nunique(), 1)
+
+    def test_error_empty_dataset(self):
+        dataset = pd.DataFrame({})
+        num_centroids = 2
+        max_i = 10
+
+        with self.assertRaises(EmptyDatasetError):
+            k_means_logic(dataset=dataset, num_centroids=num_centroids, max_i=max_i)
+
+    def test_error_zero_centroids(self):
+        dataset = pd.DataFrame(
+            {
+                "GDP_per_capita": [30000, 25000, 40000],
+                "life_expectancy": [78, 75, 82],
+                "literacy_rate": [95, 90, 98],
+            }
+        )
+        num_centroids = 0
+        max_i = 10
+
+        with self.assertRaises(ZeroCentroidsError):
+            k_means_logic(dataset=dataset, num_centroids=num_centroids, max_i=max_i)
+
+    def test_error_more_centroids(self):
+        dataset = pd.DataFrame(
+            {
+                "GDP_per_capita": [30000, 25000],
+                "life_expectancy": [78, 75],
+                "literacy_rate": [95, 90],
+            }
+        )
+        num_centroids = 3
+        max_i = 10
+
+        with self.assertRaises(MoreCentroidsError):
+            k_means_logic(dataset=dataset, num_centroids=num_centroids, max_i=max_i)
 
 
 if __name__ == "__main__":

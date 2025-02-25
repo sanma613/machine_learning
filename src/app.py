@@ -3,8 +3,11 @@ import math
 import pandas as pd
 import numpy as np
 
-random.seed(42)
-np.random.seed(36)
+from src.errors.app_error import (
+    EmptyDatasetError,
+    ZeroCentroidsError,
+    MoreCentroidsError,
+)
 
 
 def calculate_euclidean_distance_between_points(
@@ -79,6 +82,13 @@ def proccess_data(dataset: pd.DataFrame):
 
 
 def k_means_logic(dataset: pd.DataFrame, num_centroids: int, max_i: int):
+    if dataset.empty:
+        raise EmptyDatasetError()
+    if not num_centroids:
+        raise ZeroCentroidsError()
+    if num_centroids > dataset.shape[0]:
+        raise MoreCentroidsError()
+
     dataset = proccess_data(dataset)
 
     random_centroid = tuple(dataset.sample(n=1).values[0])
