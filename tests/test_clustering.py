@@ -7,11 +7,12 @@ import unittest
 import pandas as pd
 import numpy as np
 
-from src.app import k_means_logic
+from src.app.app_logic import Kmeans
 from src.errors.app_error import (
     EmptyDatasetError,
     ZeroCentroidsError,
     MoreCentroidsError,
+    NoNumericColumnsError,
 )
 
 
@@ -51,9 +52,9 @@ class TestClustering(unittest.TestCase):
         num_centroids = 2
         max_i = 50
 
-        centroids_list, updated_dataset = k_means_logic(
-            dataset=dataset, num_centroids=num_centroids, max_i=max_i
-        )
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
+        centroids_list, updated_dataset = kmeans.k_means_logic()
 
         expected_centers = [
             (1.0, 1.0, 1.0),
@@ -94,9 +95,9 @@ class TestClustering(unittest.TestCase):
         num_centroids = 3
         max_i = 10
 
-        _, updated_dataset = k_means_logic(
-            dataset=dataset, num_centroids=num_centroids, max_i=max_i
-        )
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
+        _, updated_dataset = kmeans.k_means_logic()
 
         self.assertEqual(updated_dataset["assigned_cluster"].nunique(), num_centroids)
 
@@ -124,9 +125,9 @@ class TestClustering(unittest.TestCase):
         num_centroids = 4
         max_i = 10
 
-        centroids_list, updated_dataset = k_means_logic(
-            dataset=dataset, num_centroids=num_centroids, max_i=max_i
-        )
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
+        centroids_list, updated_dataset = kmeans.k_means_logic()
 
         self.assertEqual(updated_dataset["assigned_cluster"].nunique(), num_centroids)
         for cluster_label in updated_dataset["assigned_cluster"].unique():
@@ -158,9 +159,9 @@ class TestClustering(unittest.TestCase):
         num_centroids = 2
         max_i = 10
 
-        centroids_list, updated_dataset = k_means_logic(
-            dataset=dataset, num_centroids=num_centroids, max_i=max_i
-        )
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
+        centroids_list, updated_dataset = kmeans.k_means_logic()
 
         expected_centers = [(1.0, 1.0, 1.0), (0.0, 0.0, 0.0)]
 
@@ -198,11 +199,11 @@ class TestClustering(unittest.TestCase):
             }
         )
         num_centroids = 2
-        max_i = 50
+        max_i = 10
 
-        centroids_list, updated_dataset = k_means_logic(
-            dataset=dataset, num_centroids=num_centroids, max_i=max_i
-        )
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
+        centroids_list, updated_dataset = kmeans.k_means_logic()
 
         self.assertEqual(updated_dataset["assigned_cluster"].nunique(), num_centroids)
         # Instead of filtering by GDP_per_capita value (which may have been normalized),
@@ -238,9 +239,9 @@ class TestClustering(unittest.TestCase):
         num_centroids = 2
         max_i = 10
 
-        centroids_list, updated_dataset = k_means_logic(
-            dataset=dataset, num_centroids=num_centroids, max_i=max_i
-        )
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
+        centroids_list, updated_dataset = kmeans.k_means_logic()
 
         self.assertEqual(updated_dataset["assigned_cluster"].nunique(), num_centroids)
         group1 = updated_dataset[updated_dataset["GDP_per_capita"] == 0.0]
@@ -253,8 +254,10 @@ class TestClustering(unittest.TestCase):
         num_centroids = 2
         max_i = 10
 
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
         with self.assertRaises(EmptyDatasetError):
-            k_means_logic(dataset=dataset, num_centroids=num_centroids, max_i=max_i)
+            kmeans.k_means_logic()
 
     def test_error_zero_centroids(self):
         dataset = pd.DataFrame(
@@ -267,8 +270,10 @@ class TestClustering(unittest.TestCase):
         num_centroids = 0
         max_i = 10
 
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
         with self.assertRaises(ZeroCentroidsError):
-            k_means_logic(dataset=dataset, num_centroids=num_centroids, max_i=max_i)
+            kmeans.k_means_logic()
 
     def test_error_more_centroids(self):
         dataset = pd.DataFrame(
@@ -281,8 +286,26 @@ class TestClustering(unittest.TestCase):
         num_centroids = 3
         max_i = 10
 
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
         with self.assertRaises(MoreCentroidsError):
-            k_means_logic(dataset=dataset, num_centroids=num_centroids, max_i=max_i)
+            kmeans.k_means_logic()
+
+    def test_error_no_numeric_colums(self):
+        dataset = pd.DataFrame(
+            {
+                "GDP_per_capita": [30000, 25000],
+                "life_expectancy": [78, 75],
+                "literacy_rate": ["noventa y cinco", 90],
+            }
+        )
+        num_centroids = 3
+        max_i = 10
+
+        kmeans = Kmeans(dataset, num_centroids, max_i)
+
+        with self.assertRaises(NoNumericColumnsError):
+            kmeans.k_means_logic()
 
 
 if __name__ == "__main__":
