@@ -7,8 +7,8 @@ from pathlib import Path
 # Agregar la raíz del proyecto al sistema de rutas
 sys.path.append("src")
 
-from src.model.KMeansLogic import Kmeans
-from errors.app_error import KmeansErrors
+from model.KMeansLogic import Kmeans
+from model.errors.KMeansError import KmeansError
 
 # Obtener entrada del usuario
 file_path = input("Ingresa la ruta del dataset: ")
@@ -28,7 +28,7 @@ filtered_dataset = dataset[["GDP_per_capita", "life_expectancy", "literacy_rate"
 try:
     kmeans = Kmeans(filtered_dataset, num_centroids, max_i)
     centroid_centers, updated_dataset = kmeans.k_means_logic()
-except KmeansErrors as e:
+except KmeansError as e:
     print(str(e))
     sys.exit(1)
 

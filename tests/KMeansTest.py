@@ -6,7 +6,7 @@ import numpy as np
 sys.path.append("src")
 
 from model.KMeansLogic import Kmeans
-from errors.app_error import (
+from model.errors.KMeansError import (
     EmptyDatasetError,
     ZeroCentroidsError,
     MoreCentroidsError,

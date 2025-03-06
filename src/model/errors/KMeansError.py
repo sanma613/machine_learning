@@ -1,8 +1,8 @@
-class KmeansErrors(Exception):
+class KmeansError(Exception):
     pass
 
 
-class EmptyDatasetError(KmeansErrors):
+class EmptyDatasetError(KmeansError):
     def __init__(self):
         message = (
             "El dataset está vacío: "
@@ -12,7 +12,7 @@ class EmptyDatasetError(KmeansErrors):
         super().__init__(message)
 
 
-class ZeroCentroidsError(KmeansErrors):
+class ZeroCentroidsError(KmeansError):
     def __init__(self):
         message = (
             "El numero de centroides es 0: "
@@ -22,7 +22,7 @@ class ZeroCentroidsError(KmeansErrors):
         super().__init__(message)
 
 
-class MoreCentroidsError(KmeansErrors):
+class MoreCentroidsError(KmeansError):
     def __init__(self, num_centroids: int, num_data: int):
         message = (
             f"El número de centroides es inválido: "
@@ -32,7 +32,7 @@ class MoreCentroidsError(KmeansErrors):
         super().__init__(message)
 
 
-class NoNumericColumnsError(KmeansErrors):
+class NoNumericColumnsError(KmeansError):
     def __init__(self, invalid_columns: list[str]):
         message = (
             "Se encontraron columnas con datos no numéricos. "
