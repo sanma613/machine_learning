@@ -1,14 +1,12 @@
 import sys
-import os
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
-
 import unittest
 import pandas as pd
 import numpy as np
 
-from src.app.app_logic import Kmeans
-from src.errors.app_error import (
+sys.path.append("src")
+
+from model.KMeansLogic import Kmeans
+from errors.app_error import (
     EmptyDatasetError,
     ZeroCentroidsError,
     MoreCentroidsError,
@@ -16,7 +14,7 @@ from src.errors.app_error import (
 )
 
 
-class TestClustering(unittest.TestCase):
+class TestKMeans(unittest.TestCase):
 
     def test_normal_case_1(self):
         """
