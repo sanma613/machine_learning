@@ -15,10 +15,10 @@ from model.errors.KMeansError import (
 )
 
 # Se define una seed para el random en busca de que el comportamiento sea replicable y de esta manera sea testeable
-RANDOM_SEED = 42
-NUMPY_SEED = 32
-random.seed(RANDOM_SEED)
-np.random.seed(NUMPY_SEED)
+FIXED_RANDOM_SEED = 42
+FIXED_NUMPY_SEED= 32
+random.seed(FIXED_RANDOM_SEED)
+np.random.seed(FIXED_NUMPY_SEED)
 
 
 class Kmeans:
