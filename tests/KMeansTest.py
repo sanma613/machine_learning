@@ -48,9 +48,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 2
-        max_i = 50
+        max_iteration = 50
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         centroids_list, updated_dataset = kmeans.k_means_logic()
 
@@ -91,9 +91,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 3
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         _, updated_dataset = kmeans.k_means_logic()
 
@@ -121,9 +121,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 4
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         centroids_list, updated_dataset = kmeans.k_means_logic()
 
@@ -155,9 +155,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 2
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         centroids_list, updated_dataset = kmeans.k_means_logic()
 
@@ -197,9 +197,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 2
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         centroids_list, updated_dataset = kmeans.k_means_logic()
 
@@ -235,9 +235,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 2
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         centroids_list, updated_dataset = kmeans.k_means_logic()
 
@@ -250,9 +250,9 @@ class TestKMeans(unittest.TestCase):
     def test_error_empty_dataset(self):
         dataset = pd.DataFrame({})
         num_centroids = 2
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         with self.assertRaises(EmptyDatasetError):
             kmeans.k_means_logic()
@@ -266,9 +266,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 0
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         with self.assertRaises(ZeroCentroidsError):
             kmeans.k_means_logic()
@@ -282,9 +282,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 3
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         with self.assertRaises(MoreCentroidsError):
             kmeans.k_means_logic()
@@ -298,9 +298,9 @@ class TestKMeans(unittest.TestCase):
             }
         )
         num_centroids = 3
-        max_i = 10
+        max_iteration = 10
 
-        kmeans = Kmeans(dataset, num_centroids, max_i)
+        kmeans = Kmeans(dataset, num_centroids, max_iteration)
 
         with self.assertRaises(NoNumericColumnsError):
             kmeans.k_means_logic()

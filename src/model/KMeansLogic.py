@@ -28,13 +28,13 @@ class Kmeans:
     Atributos:
         - dataset (pd.DataFrame): Conjunto de datos a procesar.
         - num_centroids (int): Número de centroides a utilizar.
-        - max_i (int): Número máximo de iteraciones para la optimización.
+        - max_iteration (int): Número máximo de iteraciones para la optimización.
     """
 
-    def __init__(self, dataset: pd.DataFrame, num_centroids: int, max_i: int) -> None:
+    def __init__(self, dataset: pd.DataFrame, num_centroids: int, max_iteration: int) -> None:
         self.dataset = dataset
         self.num_centroids = num_centroids
-        self.max_i = max_i
+        self.max_iteration = max_iteration
 
     def proccess_data(self) -> None:
         """
@@ -45,10 +45,10 @@ class Kmeans:
 
         self.dataset = self.dataset.copy().dropna()
         for column in self.dataset.columns:
-            min_val = self.dataset[column].min()
-            max_val = self.dataset[column].max()
+            min_value = self.dataset[column].min()
+            max_value = self.dataset[column].max()
             self.dataset[column] = self.dataset[column].apply(
-                lambda x: (x - min_val) / (max_val - min_val)
+                lambda x: (x - min_value) / (max_value - min_value)
             )
 
     def calculate_euclidean_distance_between_points(
@@ -134,7 +134,7 @@ class Kmeans:
         Returns:
             list: Lista con las nuevas coordenadas de los centroides.
         """
-        for _ in range(self.max_i):
+        for _ in range(self.max_iteration):
             # Actualizar centroides como el promedio de los puntos asignados a cada cluster
             new_centroids_df = self.dataset.groupby("assigned_cluster")[
                 ["GDP_per_capita", "life_expectancy", "literacy_rate"]
