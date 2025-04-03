@@ -10,7 +10,7 @@ from model.KMeansLogic import Kmeans
 from model.errors.KMeansError import KmeansError
 
 file_path = input("Ingresa la ruta del dataset: ")
-num_centroids = int(input("Ingresa el numero de centroides: "))
+num_centroids = int(input("Ingresa el numero de centrodes: "))
 max_i = int(input("Ingresa las iteraciones que deseas realizar: "))
 
 
