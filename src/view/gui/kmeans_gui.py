@@ -11,25 +11,25 @@ from kivy.uix.popup import Popup
 import sys
 sys.path.append("src")
 
-from model.KmeansLogic import Kmeans
-
+from src.model.KMeansLogic import Kmeans
 class KmeansApp(App):
     def build(self):
-        canvas = GridLayout(rows=7)
+        canvas = GridLayout(rows=7, row_default_height=40)
 
-        canvas.add_widget(Label(text="Ingresa la ruta del dataset:"))
+        canvas.add_widget(Label(text="Ingresa la ruta del dataset:", font_size=15))
         self.file_path = TextInput()
         canvas.add_widget(self.file_path)
 
-        canvas.add_widget(Label(text="Ingresa el numero de centrodes:"))
+        canvas.add_widget(Label(text="Ingresa el numero de centrodes:", font_size=15))
         self.centroids = TextInput(input_filter="int")
         canvas.add_widget(self.centroids)
 
-        canvas.add_widget(Label(text="Ingresa las iteraciones que deseas realizar:"))
+        canvas.add_widget(Label(text="Ingresa las iteraciones que deseas realizar:", font_size=15))
         self.iterations = TextInput(input_filter="int")
         canvas.add_widget(self.iterations)
         
-        submit_button = Button(text="Mostrar Gráficos")
+        submit_button = Button(text="Mostrar Gráficos", font_size=15)
+        canvas.add_widget(submit_button)
 
         return canvas
 
