@@ -1,6 +1,7 @@
 # Segmentación Socioeconómica de Países usando K-Means Clustering
 
 **Creado por:** María Isabel Zuluaga Quintero, Santiago Machado Serna
+**Implementada la GUI por:** Kevin Sebastián Cifuentes, Sebastian Valencia Valencia
 
 ## Descripción
 
@@ -20,7 +21,7 @@ machine_learning/
 │   │   │   ├── __init__.py
 │   ├── view/
 │   │   ├── console/
-│   │   │   ├── KMeansConsoleView.py
+│   │   │   ├── kmeans_console_view.py
 │
 └── tests/
     ├── KMeansTest.py
@@ -61,7 +62,7 @@ poetry install
 ### **Ejecutar la Interfaz de Consola**
 
 ```sh
-python src/view/console/KMeansConsoleView.py
+python src/view/console/kmeans_console_view.py
 ```
 
 - Se solicitará el dataset a clusterizar (por defecto hay un dataset de prueba en la raíz del proyecto).
@@ -82,6 +83,35 @@ Se incluyen:
 - **4 casos de error**
 
 ---
+
+## **Ejecutar la interfaz gráfica de usuario**
+
+```sh
+python src/view/gui/kmeans_gui.py
+```
+
+- **Descripción:** La interfaz gráfica permite cargar un dataset, configurar los parámetros del algoritmo K-Means (número de centroides y número máximo de iteraciones) y visualizar los resultados en gráficos interactivos.
+
+- **Entradas:**
+
+  * Ruta del dataset: Archivo CSV con las columnas GDP_per_capita, life_expectancy y literacy_rate.
+  * Número de centroides: Entero positivo que define el número de clusters.
+  * Iteraciones máximas: Entero positivo que indica el número máximo de iteraciones.
+
+- **Salidas:**
+
+  * Gráfico 3D de los clusters generados.
+  * Gráficos 2D comparativos de las características del dataset.
+
+- **Pasos:**
+
+  * Ejecuta el comando anterior para iniciar la interfaz gráfica.
+  * Ingresa la ruta del dataset en el campo correspondiente.
+  * Especifica el número de centroides y las iteraciones máximas.
+  * Haz clic en el botón "Mostrar Gráficos" para ejecutar el algoritmo y visualizar los resultados.
+  * Si deseas reiniciar el formulario, haz clic en el botón "Reiniciar".
+  
+**Nota:** Asegúrate de que el archivo CSV esté correctamente formateado y contenga las columnas requeridas. Puedes usar el archivo datos_prueba.csv incluido en el repositorio como ejemplo.
 
 ## 📥 Entradas del Algoritmo
 
