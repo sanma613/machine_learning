@@ -16,8 +16,8 @@ import io
 import sys
 sys.path.append("src")
 
-from model.KMeansLogic import Kmeans
-from model.errors.KMeansError import KmeansError
+from model.kmeans_logic import Kmeans
+from model.errors.kmeans_error import KmeansError
 
 class KmeansApp(App):
     def build(self):

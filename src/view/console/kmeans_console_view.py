@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.path.append("src")
 
-from model.KMeansLogic import Kmeans
-from model.errors.KMeansError import KmeansError
+from model.kmeans_logic import Kmeans
+from model.errors.kmeans_error import KmeansError
 
 file_path = input("Ingresa la ruta del dataset: ")
 num_centroids = int(input("Ingresa el numero de centrodes: "))

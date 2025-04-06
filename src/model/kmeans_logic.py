@@ -7,7 +7,7 @@ import random
 import pandas as pd
 import numpy as np
 
-from model.errors.KMeansError import (
+from model.errors.kmeans_error import (
     EmptyDatasetError,
     ZeroCentroidsError,
     MoreCentroidsError,

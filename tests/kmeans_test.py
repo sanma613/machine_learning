@@ -5,8 +5,8 @@ import numpy as np
 
 sys.path.append("src")
 
-from model.KMeansLogic import Kmeans
-from model.errors.KMeansError import (
+from model.kmeans_logic import Kmeans
+from model.errors.kmeans_error import (
     EmptyDatasetError,
     ZeroCentroidsError,
     MoreCentroidsError,

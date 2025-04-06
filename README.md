@@ -14,17 +14,17 @@ machine_learning/
 ├── src/
 │   ├── __init__.py
 │   ├── model/
-│   │   ├── KMeansLogic.py
+│   │   ├── kmeans_logic.py
 │   │   ├── __init__.py
 │   │   ├── errors/
-│   │   │   ├── KMeansError.py
+│   │   │   ├── kmeans_error.py
 │   │   │   ├── __init__.py
 │   ├── view/
 │   │   ├── console/
 │   │   │   ├── kmeans_console_view.py
 │
 └── tests/
-    ├── KMeansTest.py
+    ├── kmeans_test.py
     ├── __init__.py
 
 │   casos_prueba.xlsx
@@ -73,7 +73,7 @@ python src/view/console/kmeans_console_view.py
 ### **Ejecutar Pruebas Unitarias**
 
 ```sh
-python -m unittest tests/KMeansTest.py
+python -m unittest tests/kmeans_test.py
 ```
 
 Se incluyen:
