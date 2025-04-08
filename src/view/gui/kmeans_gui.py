@@ -39,7 +39,7 @@ class KmeansApp(App):
 
     def create_main_container(self):
         """Create the main grid container."""
-        grid_container = GridLayout(cols=1, size_hint_y=None, padding=20, spacing=20)
+        grid_container = GridLayout(cols=1, size_hint_y=None, padding=20, spacing=30)
         grid_container.bind(minimum_height=grid_container.setter('height'))  # Adjust height dynamically
 
         # Add title
@@ -70,16 +70,23 @@ class KmeansApp(App):
 
     def create_form_container(self):
         """Create the form container with input fields."""
-        form_container = GridLayout(cols=2, size_hint=(1, None), height=200, spacing=10)
+        form_container = GridLayout(cols=2, size_hint=(1, None), height=200, spacing=30)
 
         # Dataset path
-        form_container.add_widget(Label(
+        dataset_path_label = Label(
             text="Selecciona el archivo del dataset:",
             font_size=15,
             color=(0, 0, 0, 1),
             size_hint=(0.4, None),
-            height=30
-        ))
+            halign="center",
+            valign="middle",
+            height=30,
+            text_size=(Window.width * 0.7, None)
+        )
+        
+        dataset_path_label.bind(size=lambda instance, value: setattr(instance, 'text_size', (instance.width, None)))
+        
+        form_container.add_widget(dataset_path_label)
         self.file_path = TextInput(size_hint=(0.6, None), height=30, readonly=True)  # Read-only TextInput
         form_container.add_widget(self.file_path)
 
@@ -95,24 +102,36 @@ class KmeansApp(App):
         form_container.add_widget(file_chooser_button)
 
         # Number of centroids
-        form_container.add_widget(Label(
+        centroids_label = Label(
             text="Ingresa el número de centroides:",
             font_size=15,
             color=(0, 0, 0, 1),
             size_hint=(0.4, None),
-            height=30
-        ))
+            halign="center",
+            valign="middle",
+            height=30,
+            text_size=(Window.width * 0.7, None)
+        )
+        centroids_label.bind(size=lambda instance, value: setattr(instance, 'text_size', (instance.width, None)))
+
+        form_container.add_widget(centroids_label)
         self.centroids = TextInput(input_filter="int", size_hint=(0.6, None), height=30)
         form_container.add_widget(self.centroids)
 
         # Maximum iterations
-        form_container.add_widget(Label(
+        iterations_label = Label(
             text="Ingresa las iteraciones máximas:",
             font_size=15,
             color=(0, 0, 0, 1),
             size_hint=(0.4, None),
-            height=30
-        ))
+            halign="center",
+            valign="middle",
+            height=30,
+            text_size=(Window.width * 0.7, None)
+        )
+        iterations_label.bind(size=lambda instance, value: setattr(instance, 'text_size', (instance.width, None)))
+
+        form_container.add_widget(iterations_label)
         self.iterations = TextInput(input_filter="int", size_hint=(0.6, None), height=30)
         form_container.add_widget(self.iterations)
 
