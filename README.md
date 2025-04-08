@@ -1,6 +1,7 @@
 # Segmentación Socioeconómica de Países usando K-Means Clustering
 
 **Creado por:** María Isabel Zuluaga Quintero, Santiago Machado Serna
+
 **Implementada la GUI por:** Kevin Sebastián Cifuentes, Sebastian Valencia Valencia
 
 ## Descripción
