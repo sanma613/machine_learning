@@ -1,5 +1,6 @@
 # Buildozer directories
 .buildozer/
+
 bin/
 
 dist/
