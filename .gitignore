@@ -2,6 +2,8 @@
 .buildozer/
 bin/
 
+dist/
+
 # Python virtual environments
 .venv/
 
