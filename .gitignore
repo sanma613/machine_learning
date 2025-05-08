@@ -1,10 +1,22 @@
+# Buildozer directories
+.buildozer/
+
+bin/
+
+dist/
+
+# Python virtual environments
 .venv/
 
+# Python cache files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
+# Environment variables
 .env
+
+.poetry/
 
 .vscode/
