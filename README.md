@@ -45,13 +45,12 @@ machine_learning/
 │   │   └── gui/
 │   │       └── kmeans_gui.py            # Interfaz gráfica
 ├── tests/
-│   └── kmeans_test.py                   # Pruebas unitarias
+│   └── kmeans_test.py                     # Pruebas unitarias
 ├── casos_prueba.xlsx                    # Documentación de casos de prueba
 ├── datos_prueba.csv                     # Dataset de prueba
 ├── secret_config.py                     # Configuración de conexión a BD (no incluido en repo)
 ├── estructura.txt                       # Descripción de la estructura del proyecto
-├── poetry.lock                          # Bloqueo de dependencias
-├── pyproject.toml                       # Configuración del proyecto
+├── requirements.txt                    # Configuración del proyecto
 └── README.md                            # Este archivo
 ```
 
