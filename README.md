@@ -72,12 +72,6 @@ cd machine_learning
 ### 3. Instalar dependencias
 
 ```sh
-poetry install
-```
-
-Si no tienes Poetry instalado, puedes usar pip:
-
-```sh
 pip install -r requirements.txt
 ```
 
