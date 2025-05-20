@@ -128,7 +128,6 @@ class ResultsController:
                     )
                 return None
         except pg.Error as e:
-            print(f"Error al obtener resultado: {e}")
             raise
 
     def update_result(self, result_id: int, clustering_result: ClusteringResult):
