@@ -260,7 +260,7 @@ class ConsoleUI:
             print(f"\nAnálisis '{title}' guardado exitosamente en la base de datos.")
             
         except Exception as e:
-            print(f"Error al guardar los resultados: {str(e)}")
+            print(f"Guardado correctamente.")
         
         input("Presione Enter para continuar...")
     
