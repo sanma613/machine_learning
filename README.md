@@ -59,7 +59,6 @@ machine_learning/
 ### 1. Requisitos previos
 
 - Python 3.6 o superior
-- Poetry para la gestión de dependencias
 - PostgreSQL (recomendamos usar Neon como servicio en la nube)
 
 ### 2. Clonar el repositorio
