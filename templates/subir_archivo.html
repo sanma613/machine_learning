@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Proyecto Machine Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Bienvenido al Proyecto de Machine Learning</h1>
+    <p>Este proyecto implementa el algoritmo K-Means para agrupar datos.</p>
+
+    <form action="/resultados" method="post" enctype="multipart/form-data">
+        <label for="archivo">Subir archivo CSV:</label>
+        <input type="file" name="archivo" accept=".csv" required>
+        <button type="submit">Procesar</button>
+    </form>
+</body>
+</html>
