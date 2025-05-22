@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados del Clustering</title>
+</head>
+<body>
+    <h1>Resultados de K-Means</h1>
+
+    {% if resultados %}
+        <table border="1">
+            <thead>
+                <tr>
+                    {% for col in columnas %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in resultados %}
+                    <tr>
+                        {% for celda in fila %}
+                            <td>{{ celda }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No se encontraron resultados.</p>
+    {% endif %}
+
+    <a href="subir_archivo.html">Volver al inicio</a>
+</body>
+</html>
