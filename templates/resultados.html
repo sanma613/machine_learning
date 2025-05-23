@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Resultados del Clustering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="index.html">
 </head>
 <body>
     <h1>Resultados de K-Means</h1>
@@ -30,6 +32,9 @@
         <p>No se encontraron resultados.</p>
     {% endif %}
 
-    <button><a href="index.html">Volver al inicio</a></button>
+    <form action="/" method="get">
+        <a href="index.html"><button type="submit">Volver a la página principal</button></a>
+    </form>
+
 </body>
 </html>
