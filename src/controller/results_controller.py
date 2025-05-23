@@ -2,17 +2,18 @@ import psycopg2 as pg
 from typing import Optional, List, Dict
 import sys
 from contextlib import contextmanager
+import psycopg2
 
 sys.path.append(".")
 sys.path.append("src")
 
-from SecretConfig import SecretConfig
+import SecretConfig
 from model.result_model import ClusteringResult
 
 class ResultsController:
     def __init__(self):
         """Inicializa la conexión a la base de datos utilizando la URL de conexión de SecretConfig."""
-        self.db_url = SecretConfig.DB_URL
+        self.db_url = SecretConfig
 
     @contextmanager
     def _connect(self):
@@ -206,3 +207,9 @@ class ResultsController:
         except pg.Error as e:
             print(f"Error al listar títulos: {e}")
             raise
+    def ObtenerCursor():
+        """ Crea la conexion a la base de datos y retorna un cursor para hacer consultas """
+        connection = psycopg2.connect(database=SecretConfig.PGDATABASE, user=SecretConfig.PGUSER, password=SecretConfig.PGPASSWORD, host=SecretConfig.PGHOST, port=SecretConfig.PGPORT)
+        # Todas las instrucciones se ejecutan a tavés de un cursor
+        cursor = connection.cursor()
+        return cursor

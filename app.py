@@ -1,7 +1,11 @@
 # archivo nuevo, por ejemplo webapp.py
-from flask import Flask, render_template
+from flask import Flask, render_template,request
+import pandas as pd
+
 import sys
 sys.path.append('src')
+sys.path.append('src/controller')
+
 from src.controller.results_controller import ResultsController
 
 app = Flask(__name__)
@@ -10,14 +14,33 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/resultados')
-def resultados():
-    # Aquí podrías procesar datos o leer resultados
-    return render_template('resultados.html')
+#@app.route('/resultados')
+#def resultados():
+#    # Aquí podrías procesar datos o leer resultados
+#    return render_template('resultados.html')
 
-@app.route('/buscar')
-def buscar():
-    return render_template('results_controller.py', ResultsController.get_result_by_id())
+@app.route('/resultados', methods=['POST'])
+def procesar_archivo():
+    if 'archivo' not in request.files:
+        return "No se subió ningún archivo", 400
+
+    archivo = request.files['archivo']
+
+    if archivo.filename == '':
+        return "Nombre de archivo vacío", 400
+
+    try:
+        df = pd.read_csv(archivo)
+
+        # Aquí podrías aplicar tu algoritmo de clustering, guardar en DB, etc.
+        # Para el ejemplo, vamos a mostrar los primeros 5 registros:
+        columnas = list(df.columns)
+        filas = df.head(5).values.tolist()
+
+        return render_template('resultados.html', columnas=columnas, resultados=filas)
+
+    except Exception as e:
+        return f"Error al procesar el archivo: {e}", 500
 
 if __name__ == '__main__':
     app.run(debug=True)
