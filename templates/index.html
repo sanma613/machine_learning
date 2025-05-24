@@ -5,6 +5,7 @@
     <title>Proyecto Machine Learning</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="resultados.html">
+    <link rel="stylesheet" href="buscar.html">
 </head>
 <body>
     <h1>Bienvenido al Proyecto de Machine Learning</h1>
@@ -15,6 +16,9 @@
         <input type="file" name="archivo" accept=".csv" required>
     <button type="submit">Procesar</button>
     </form>
-
+    <form action="/buscar" method="post">
+        <h1>Buscar un usuario</h1>
+        <button type="submit">Buscar Usuario</button>
+    </form>
 </body>
 </html>

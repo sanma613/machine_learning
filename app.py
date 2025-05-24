@@ -14,10 +14,12 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-#@app.route('/resultados')
+@app.route('/buscar')
+def buscar():
+    return render_template('buscar.html')
 #def resultados():
 #    # Aquí podrías procesar datos o leer resultados
-#    return render_template('resultados.html')
+#    return render_template('buscar.html')
 
 @app.route('/resultados', methods=['POST'])
 def procesar_archivo():
