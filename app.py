@@ -20,6 +20,9 @@ def buscar():
 #def resultados():
 #    # Aquí podrías procesar datos o leer resultados
 #    return render_template('buscar.html')
+@app.route('/lista')
+def lista_tarjetas():
+    return render_template('lista_tarjetas.html', id=request.args["id"]  )
 
 @app.route('/resultados', methods=['POST'])
 def procesar_archivo():

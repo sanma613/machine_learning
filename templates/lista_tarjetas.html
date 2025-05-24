@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <p>
+        Búsqueda de Tarjetas para la cédula : {{ id }}
+    </p>
+    <table border="1" cellspacing="0" cellpadding="5">
+      <thead>
+        <tr>
+          <th rowspan="2">Nombre Caso</th>
+          <th rowspan="2">Tipo</th>
+          <th rowspan="2">Dataset</th>
+          <th colspan="4" style="background-color:#d9ead3;">ENTRADA</th>
+          <th colspan="1" style="background-color:#f4cccc;">SALIDA</th>
+        </tr>
+        <tr>
+          <th>Number of Centroids</th>
+          <th>Number of Iterations</th>
+          <th>Expected Clusters</th>
+          <th>Expected Centers</th>
+          <th>Error Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ejemplo 1</td>
+          <td>KMeans</td>
+          <td>dataset.csv</td>
+          <td>3</td>
+          <td>100</td>
+          <td>Cluster A, B, C</td>
+          <td>(x1,y1), (x2,y2), (x3,y3)</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+</body>
+
+</html>
