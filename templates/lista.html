@@ -6,39 +6,54 @@
 </head>
 
 <body>
-    <p>
-        Búsqueda de Tarjetas para la cédula : {{ id }}
-    </p>
-    <table border="1" cellspacing="0" cellpadding="5">
-      <thead>
-        <tr>
-          <th rowspan="1">Nombre Caso</th>
-          <th rowspan="2">Tipo</th>
-          <th rowspan="3">Dataset</th>
-          <th colspan="4" >ENTRADA</th>
-          <th colspan="5" >SALIDA</th>
-        </tr>
-        <tr>
-          <th>Number of Centroids</th>
-          <th>Number of Iterations</th>
-          <th>Expected Clusters</th>
-          <th>Expected Centers</th>
-          <th>Error Message</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Ejemplo 1</td>
-          <td>KMeans</td>
-          <td>dataset.csv</td>
-          <td>3</td>
-          <td>100</td>
-          <td>Cluster A, B, C</td>
-          <td>(x1,y1), (x2,y2), (x3,y3)</td>
-          <td></td>
-        </tr>
-      </tbody>
+    <p>Búsqueda de Tarjetas para la cédula: <span id="cedula-text"></span></p>
+    <input type="text" id="cedula" placeholder="Ingrese cédula">
+    <button onclick="buscar()">Buscar</button>
+
+    <table border="1" cellspacing="0" cellpadding="5" id="tabla-resultados">
+        <thead>
+            <tr>
+                <th>Nombre Caso</th>
+                <th>Tipo</th>
+                <th>Dataset</th>
+                <th>Number of Centroids</th>
+                <th>Number of Iterations</th>
+                <th>Expected Clusters</th>
+                <th>Expected Centers</th>
+                <th>Error Message</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
     </table>
+
+    <script>
+        function buscar() {
+            let id = document.getElementById("Id").value;
+            document.getElementById("Id").innerText = id;
+
+            fetch(`/buscar?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    let tbody = document.querySelector("#tabla-resultados tbody");
+                    tbody.innerHTML = `
+                        <tr>
+                            <td>${data["Nombre Caso"]}</td>
+                            <td>${data["Tipo"]}</td>
+                            <td>${data["Dataset"]}</td>
+                            <td>${data["Centroids"]}</td>
+                            <td>${data["Iterations"]}</td>
+                            <td>${data["Clusters"]}</td>
+                            <td>${data["Centers"]}</td>
+                            <td>${data["Error"] || ""}</td>
+                        </tr>`;
+                })
+                .catch(err => {
+                    alert("No se encontró la cédula.");
+                    console.error(err);
+                });
+        }
+    </script>
 
 </body>
 

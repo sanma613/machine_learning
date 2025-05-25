@@ -1,5 +1,5 @@
 # archivo nuevo, por ejemplo webapp.py
-from flask import Flask, render_template,request
+from flask import Flask, render_template,request,jsonify
 import pandas as pd
 
 import sys
@@ -14,18 +14,24 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/buscar')
+@app.route('/buscar', methods=['GET'])
 def buscar():
     return render_template('buscar.html')
-#def resultados():
-#    # Aquí podrías procesar datos o leer resultados
-#    return render_template('buscar.html')
-@app.route("/lista", methods=["POST"])
+
+@app.route("/lista", methods=["GET", "POST"])
 def lista():
-    id = request.form.get("id")  # Manejo seguro
-    if not id:
-        return "Falta el parámetro 'id'", 400
-    return render_template("lista.html", id=id)
+    
+    df = pd.read_excel('casos_prueba.xlsx')
+
+    # Filtrar por ID
+    resultado = df[df['Id'] == int(id)]
+    if resultado.empty:
+        return jsonify({"error": "ID no encontrado"}), 404
+
+    # Convertir a dict
+    datos = resultado.to_dict(orient='records')[0]
+    return jsonify(datos)       
+
 
 @app.route('/resultados', methods=['POST'])
 def procesar_archivo():
