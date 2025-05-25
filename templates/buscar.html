@@ -2,27 +2,25 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="buscar.html">
+    <link rel="stylesheet" href="lista_tarjetas.html">
 </head>
 
 <body>
     <form action="/lista" method="post">
+    <h1>Buscar una tarjeta</h1>
+    <p>Seleccione el número de cédula</p>
 
-        <h1>Buscar una tarjeta</h1>
+    <label for="id">Id:</label>
+    <select name="id">
+        <option value="1">Usuario 1</option>
+        <option value="2">Usuario 2</option>
+        <option value="3">Usuario 3</option>
+    </select>
 
-        <p>Ingrese el número de cédula</p>
-
-        <div>
-            Id: <input type="text" name="id" />
-            <div> Id: <select name="id">
-            <option value="1">Usuario 1</option>
-            <option value="2">Usuario 2</option>
-            <option value="3">Usuario 3</option>
-            </select>
-        </div>
-        </div>
-        <input type="submit" value="Buscar" />
+    <input type="submit" value="Buscar" />
     </form>
+
+    
 </body>
 
 </html>
