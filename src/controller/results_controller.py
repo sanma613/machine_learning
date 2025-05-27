@@ -6,21 +6,26 @@ import psycopg2
 
 sys.path.append(".")
 sys.path.append("src")
-
+sys.path.append('model')
 import SecretConfig
-from model.result_model import ClusteringResult
+#from model.result_model import ClusteringResult
+from src.model.result_model import ClusteringResult
 
 class ResultsController:
     def __init__(self):
         """Inicializa la conexión a la base de datos utilizando la URL de conexión de SecretConfig."""
-        self.db_url = SecretConfig
+        self.db_host = SecretConfig.PGHOST
+        self.db_databse = SecretConfig.PGDATABASE
+        self.db_user = SecretConfig.PGUSER
+        self.db_password = SecretConfig.PGPASSWORD
+        self.db_port = SecretConfig.PGPORT
 
     @contextmanager
     def _connect(self):
         """Método privado para gestionar la conexión a la base de datos de forma segura."""
         connection = None
         try:
-            connection = pg.connect(self.db_url)
+            connection = pg.connect(database=self.db_databse, user=self.db_user, password=self.db_password, host=self.db_host, port=self.db_port)
             yield connection
         except pg.Error as e:
             if connection:
@@ -97,10 +102,10 @@ class ResultsController:
         except pg.Error as e:
             print(f"Error al insertar resultado: {e}")
             raise
-
+    
     def get_result_by_id(self, result_id: int) -> Optional[ClusteringResult]:
         """Obtiene un resultado específico por su ID."""
-        if not isinstance(result_id, int) or result_id <= 0:
+        if not isinstance(result_id, int) and result_id <= 0:
             raise ValueError("El ID debe ser un número entero positivo")
             
         try:
@@ -133,7 +138,7 @@ class ResultsController:
 
     def update_result(self, result_id: int, clustering_result: ClusteringResult):
         """Actualiza un resultado existente en la tabla."""
-        if not isinstance(result_id, int) or result_id <= 0:
+        if not isinstance(result_id, int) and result_id <= 0:
             raise ValueError("El ID debe ser un número entero positivo")
         if not isinstance(clustering_result, ClusteringResult):
             raise TypeError("El parámetro debe ser una instancia de ClusteringResult")

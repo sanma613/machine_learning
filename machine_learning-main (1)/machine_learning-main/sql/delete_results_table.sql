@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS clustering_results

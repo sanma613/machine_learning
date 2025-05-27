@@ -7,6 +7,7 @@ sys.path.append('src')
 sys.path.append('src/controller')
 
 from src.controller.results_controller import ResultsController
+handler = ResultsController()
 
 app = Flask(__name__)
 
@@ -20,17 +21,18 @@ def buscar():
 
 @app.route("/lista", methods=["GET", "POST"])
 def lista():
+    id = None  # Inicializar id para evitar error en GET
     
-    df = pd.read_excel('casos_prueba.xlsx')
+    if request.method == "POST":
+        id = request.form.get("id")  # Usar .get() para evitar KeyError
+        if id:  # Validar que id tenga un valor antes de convertir
+            id = int(id)
 
-    # Filtrar por ID
-    resultado = df[df['Id'] == int(id)]
-    if resultado.empty:
-        return jsonify({"error": "ID no encontrado"}), 404
-
-    # Convertir a dict
-    datos = resultado.to_dict(orient='records')[0]
-    return jsonify(datos)       
+    handler = ResultsController()  # Crear instancia de la clase
+    result = handler.get_result_by_id(id) if id else None  # Manejar caso de id vacío
+    
+    return render_template('lista.html', result=result)
+  
 
 
 @app.route('/resultados', methods=['POST'])
