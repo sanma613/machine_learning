@@ -6,7 +6,7 @@ sys.path.append('src')
 sys.path.append('src/controller')
 
 from src.controller.results_controller import ResultsController
-handler = ResultsController()
+from src.model.result_model import ClusteringResult
 
 app = Flask(__name__)
 
@@ -32,24 +32,41 @@ def api_buscar():
     except ValueError:
         return jsonify({"error": "ID inválido"}), 400
 
+    handler = ResultsController()
     result = handler.get_result_by_id(id)
 
     if result is None:
         return jsonify({"error": "No se encontró ningún resultado"}), 404
 
-    return jsonify(result)
+    return jsonify(result.to_dict())
 
 # Ruta tradicional con formulario POST que muestra resultados en una nueva página
 @app.route("/lista", methods=["GET", "POST"])
 def lista():
-    id = None
-    if request.method == "POST":
-        id = request.form.get("id")
-        if id:
-            id = int(id)
+    handler = ResultsController()
+    result = None
+    result_id = None
+    results_list = []
 
-    result = handler.get_result_by_id(id) if id else None
-    return render_template('lista.html', result=result)
+    try:
+        results_list = handler.list_all_titles()
+    except Exception as e:
+        return f"Error al obtener los resultados: {e}", 500
+
+    if request.method == "POST":
+        result_id = request.form.get("id")
+        if result_id:
+            try:
+                result_id = int(result_id)
+                result = handler.get_result_by_id(result_id)
+                if not result:
+                    return "No se encontró un resultado con ese ID", 404
+            except ValueError:
+                return "ID inválido", 400
+            except Exception as e:
+                return f"Error al buscar el resultado: {e}", 500
+
+    return render_template("lista.html", result=result, result_id=result_id, results_list=results_list)
 
 # Procesamiento del archivo CSV
 @app.route('/resultados', methods=['POST'])
@@ -69,6 +86,62 @@ def procesar_archivo():
         return render_template('resultados.html', columnas=columnas, resultados=filas)
     except Exception as e:
         return f"Error al procesar el archivo: {e}", 500
+
+@app.route('/modificar', methods=['GET', 'POST'])
+def modificar():
+    handler = ResultsController()
+    result = None
+    original_result = None
+    updated_result = None
+    error = None
+
+    # Manejar solicitud GET (mostrar formulario con datos actuales)
+    if request.method == 'GET':
+        result_id = request.args.get('id')
+        if result_id:
+            try:
+                result_id = int(result_id)
+                result = handler.get_result_by_id(result_id)
+                if not result:
+                    return "No se encontró un resultado con ese ID", 404
+            except ValueError:
+                return "ID inválido", 400
+            except Exception as e:
+                return f"Error al cargar el resultado: {e}", 500
+
+    # Manejar solicitud POST (actualizar datos)
+    if request.method == 'POST':
+        try:
+            result_id = int(request.form.get('id'))
+            original_result = handler.get_result_by_id(result_id)
+            if not original_result:
+                return "No se encontró un resultado con ese ID", 404
+
+            clustering_result = ClusteringResult(
+                id=result_id,
+                title=request.form.get('title'),
+                n_clusters=int(request.form.get('n_clusters')),
+                used_iterations=int(request.form.get('used_iterations')),
+                coordinates=request.form.get('coordinates'),
+                assigned_cluster=int(request.form.get('assigned_cluster')) if request.form.get('assigned_cluster') else None,
+                is_centroid='is_centroid' in request.form,
+                centroid_label=request.form.get('centroid_label')
+            )
+            success = handler.update_result(result_id, clustering_result)
+            if success:
+                updated_result = handler.get_result_by_id(result_id)  # Obtener el estado actualizado
+            else:
+                error = "No se pudo actualizar el resultado"
+        except ValueError as e:
+            error = "Datos inválidos proporcionados"
+        except Exception as e:
+            error = f"Error al actualizar el resultado: {e}"
+
+        # Recargar los datos actuales para mostrar en el formulario en caso de error
+        if error:
+            result = handler.get_result_by_id(result_id)
+
+    return render_template('modificar.html', result=result, original_result=original_result, updated_result=updated_result, error=error)
 
 if __name__ == '__main__':
     app.run(debug=True)

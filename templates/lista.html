@@ -1,31 +1,109 @@
-<!-- templates/lista.html -->
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Lista de Resultados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .result-details {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Consultar Resultado por ID</h1>
-    <form method="post">
-        <label for="id">ID:</label>
-        <input type="number" name="id" required>
-        <button type="submit">Buscar</button>
-    </form>
+    <div class="container">
+        <h2>Consultar Resultado por ID</h2>
+        <form method="POST" action="{{ url_for('lista') }}">
+            <div class="form-group">
+                <label for="id">ID:</label>
+                <input type="text" id="id" name="id" value="{{ result_id or '' }}">
+                <button type="submit">Buscar</button>
+            </div>
+        </form>
 
-    {% if result %}
-        <h2>Resultado:</h2>
-        <ul>
-            <li><strong>ID:</strong> {{ result.id }}</li>
-            <li><strong>Título:</strong> {{ result.title }}</li>
-            <li><strong>Número de Clusters:</strong> {{ result.n_clusters }}</li>
-            <li><strong>Iteraciones Usadas:</strong> {{ result.used_iterations }}</li>
-            <li><strong>Coordenadas:</strong> {{ result.coordinates }}</li>
-            <li><strong>Cluster Asignado:</strong> {{ result.assigned_cluster }}</li>
-            <li><strong>Es Centroide:</strong> {{ 'Sí' if result.is_centroid else 'No' }}</li>
-            <li><strong>Etiqueta del Centroide:</strong> {{ result.centroid_label or "N/A" }}</li>
-        </ul>
-    {% elif result is not none %}
-        <p style="color:red;">No se encontró el resultado con ese ID.</p>
-    {% endif %}
+        {% if result %}
+            <div class="result-details">
+                <h3>Resultado:</h3>
+                <p>ID: {{ result.id }}</p>
+                <p>Título: {{ result.title }}</p>
+                <p>Número de Clusters: {{ result.n_clusters }}</p>
+                <p>Iteraciones Usadas: {{ result.used_iterations }}</p>
+                <p>Coordenadas: {{ result.coordinates }}</p>
+                <p>Cluster Asignado: {{ result.assigned_cluster }}</p>
+                <p>Es Centroide: {{ 'Sí' if result.is_centroid else 'No' }}</p>
+                <p>Etiqueta del Centroide: {{ result.centroid_label or "N/A" }}</p>
+            </div>
+        {% elif result is not none %}
+            <p>No se encontró el resultado con ese ID.</p>
+        {% endif %}
+
+        <h3>Todos los Resultados</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nombre Caso</th>
+                <th>Acciones</th>
+            </tr>
+            {% for item in results_list %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.title }}</td>
+                <td><a href="{{ url_for('modificar', id=item.id) }}">Editar</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </body>
 </html>
