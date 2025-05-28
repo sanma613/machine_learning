@@ -1,60 +1,31 @@
+<!-- templates/lista.html -->
 <!DOCTYPE html>
 <html>
-
 <head>
-
+    <title>Lista de Resultados</title>
 </head>
-
 <body>
-    <p>Búsqueda de Tarjetas para la cédula: <span id="cedula-text"></span></p>
-    <input type="text" id="cedula" placeholder="Ingrese cédula">
-    <button onclick="buscar()">Buscar</button>
+    <h1>Consultar Resultado por ID</h1>
+    <form method="post">
+        <label for="id">ID:</label>
+        <input type="number" name="id" required>
+        <button type="submit">Buscar</button>
+    </form>
 
-    <table border="1" cellspacing="0" cellpadding="5" id="tabla-resultados">
-        <thead>
-            <tr>
-                <th>Nombre Caso</th>
-                <th>Tipo</th>
-                <th>Dataset</th>
-                <th>Number of Centroids</th>
-                <th>Number of Iterations</th>
-                <th>Expected Clusters</th>
-                <th>Expected Centers</th>
-                <th>Error Message</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
-    <script>
-        function buscar() {
-            let id = document.getElementById("Id").value;
-            document.getElementById("Id").innerText = id;
-
-            fetch(`/buscar?id=${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    let tbody = document.querySelector("#tabla-resultados tbody");
-                    tbody.innerHTML = `
-                        <tr>
-                            <td>${data["Nombre Caso"]}</td>
-                            <td>${data["Tipo"]}</td>
-                            <td>${data["Dataset"]}</td>
-                            <td>${data["Centroids"]}</td>
-                            <td>${data["Iterations"]}</td>
-                            <td>${data["Clusters"]}</td>
-                            <td>${data["Centers"]}</td>
-                            <td>${data["Error"] || ""}</td>
-                        </tr>`;
-                })
-                .catch(err => {
-                    alert("No se encontró la cédula.");
-                    console.error(err);
-                });
-        }
-    </script>
-
+    {% if result %}
+        <h2>Resultado:</h2>
+        <ul>
+            <li><strong>ID:</strong> {{ result.id }}</li>
+            <li><strong>Título:</strong> {{ result.title }}</li>
+            <li><strong>Número de Clusters:</strong> {{ result.n_clusters }}</li>
+            <li><strong>Iteraciones Usadas:</strong> {{ result.used_iterations }}</li>
+            <li><strong>Coordenadas:</strong> {{ result.coordinates }}</li>
+            <li><strong>Cluster Asignado:</strong> {{ result.assigned_cluster }}</li>
+            <li><strong>Es Centroide:</strong> {{ 'Sí' if result.is_centroid else 'No' }}</li>
+            <li><strong>Etiqueta del Centroide:</strong> {{ result.centroid_label or "N/A" }}</li>
+        </ul>
+    {% elif result is not none %}
+        <p style="color:red;">No se encontró el resultado con ese ID.</p>
+    {% endif %}
 </body>
-
 </html>

@@ -1,33 +1,15 @@
+<!-- templates/buscar.html -->
 <!DOCTYPE html>
 <html>
-
 <head>
-    <link rel="stylesheet" href="lista_tarjetas.html">
+    <title>Buscar usuario</title>
 </head>
-
 <body>
-    <form action="/lista" method="post">
-    <h1>Buscar una tarjeta</h1>
-    <p>Seleccione el número de cédula</p>
-
-    <label for="id">Id:</label>
-    <select name="id">
-        <option value="1">Usuario 1</option>
-        <option value="2">Usuario 2</option>
-        <option value="3">Usuario 3</option>
-        <option value="4">Usuario 4</option>
-        <option value="5">Usuario 5</option>
-        <option value="6">Usuario 6</option>
-        <option value="7">Usuario 7</option>
-        <option value="8">Usuario 8</option>
-        <option value="9">Usuario 9</option>
-        <option value="10">Usuario 10</option>
-    </select>
-
-    <input type="submit" value="Buscar" />
+    <h1>Buscar Resultado por ID</h1>
+    <form action="/lista" method="POST">
+        <label for="id">ID:</label>
+        <input type="number" id="id" name="id" required>
+        <button type="submit">Buscar</button>
     </form>
-
-    
 </body>
-
 </html>

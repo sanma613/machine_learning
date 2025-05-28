@@ -1,40 +1,25 @@
+<!-- templates/lista.html -->
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Resultados del Clustering</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="index.html">
+    <title>Resultado</title>
 </head>
 <body>
-    <h1>Resultados de K-Means</h1>
+    <h1>Resultado</h1>
 
-    {% if resultados %}
-        <table border="1">
-            <thead>
-                <tr>
-                    {% for col in columnas %}
-                        <th>{{ col }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for fila in resultados %}
-                    <tr>
-                        {% for celda in fila %}
-                            <td>{{ celda }}</td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    {% if result %}
+        <ul>
+            <li><strong>ID:</strong> {{ result.id }}</li>
+            <li><strong>Título:</strong> {{ result.title }}</li>
+            <li><strong>Clusters:</strong> {{ result.n_clusters }}</li>
+            <li><strong>Iteraciones:</strong> {{ result.used_iterations }}</li>
+            <li><strong>Coordenadas:</strong> {{ result.coordinates }}</li>
+            <li><strong>Cluster Asignado:</strong> {{ result.assigned_cluster }}</li>
+            <li><strong>¿Es Centroide?:</strong> {{ 'Sí' if result.is_centroid else 'No' }}</li>
+            <li><strong>Etiqueta Centroide:</strong> {{ result.centroid_label or 'N/A' }}</li>
+        </ul>
     {% else %}
-        <p>No se encontraron resultados.</p>
+        <p>No se encontró ningún resultado con ese ID.</p>
     {% endif %}
-
-    <form action="/" method="get">
-        <a href="index.html"><button type="submit">Volver a la página principal</button></a>
-    </form>
-
 </body>
 </html>

@@ -4,21 +4,75 @@
     <meta charset="UTF-8">
     <title>Proyecto Machine Learning</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="resultados.html">
-    <link rel="stylesheet" href="buscar.html">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        p {
+            margin-bottom: 30px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
     <h1>Bienvenido al Proyecto de Machine Learning</h1>
     <p>Este proyecto implementa el algoritmo K-Means para agrupar datos.</p>
 
-    <form action="/resultados" method="post" enctype="multipart/form-data">
-        <label for="archivo">Subir archivo CSV:</label>
-        <input type="file" name="archivo" accept=".csv" required>
-    <button type="submit">Procesar</button>
-    </form>
-    <form action="/buscar" method="post" enctype="multipart/form-data">
-        <h1>Buscar un usuario</h1>
-        <button type="submit">Buscar Usuario</button>
-    </form>
+    <div class="form-container">
+        <form action="/resultados" method="post" enctype="multipart/form-data">
+            <label for="archivo">Subir archivo CSV:</label>
+            <input type="file" name="archivo" id="archivo" accept=".csv" required>
+            <button type="submit">Procesar</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <form action="/buscar" method="post" enctype="multipart/form-data">
+            <h2>Buscar un usuario</h2>
+            <button type="submit">Buscar Usuario</button>
+        </form>
+    </div>
 </body>
 </html>
