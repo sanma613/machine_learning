@@ -1,25 +1,89 @@
-<!-- templates/lista.html -->
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Resultado</title>
+    <meta charset="UTF-8">
+    <title>Resultados - Proyecto Machine Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
 </head>
 <body>
-    <h1>Resultado</h1>
-
-    {% if result %}
+    <h1>Resultados del Archivo CSV</h1>
+    <div class="form-container">
+        <h2>Columnas:</h2>
         <ul>
-            <li><strong>ID:</strong> {{ result.id }}</li>
-            <li><strong>Título:</strong> {{ result.title }}</li>
-            <li><strong>Clusters:</strong> {{ result.n_clusters }}</li>
-            <li><strong>Iteraciones:</strong> {{ result.used_iterations }}</li>
-            <li><strong>Coordenadas:</strong> {{ result.coordinates }}</li>
-            <li><strong>Cluster Asignado:</strong> {{ result.assigned_cluster }}</li>
-            <li><strong>¿Es Centroide?:</strong> {{ 'Sí' if result.is_centroid else 'No' }}</li>
-            <li><strong>Etiqueta Centroide:</strong> {{ result.centroid_label or 'N/A' }}</li>
+            {% for columna in columnas %}
+                <li>{{ columna }}</li>
+            {% endfor %}
         </ul>
-    {% else %}
-        <p>No se encontró ningún resultado con ese ID.</p>
-    {% endif %}
+        <h2>Primeras 5 Filas:</h2>
+        <table>
+            <tr>
+                {% for columna in columnas %}
+                    <th>{{ columna }}</th>
+                {% endfor %}
+            </tr>
+            {% for fila in resultados %}
+                <tr>
+                    {% for valor in fila %}
+                        <td>{{ valor }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <a href="{{ menu_url }}" class="back-button">Volver al Menú Principal</a>
 </body>
 </html>

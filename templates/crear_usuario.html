@@ -56,6 +56,21 @@
         button:hover {
             background-color: #2980b9;
         }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            background-color: #c0392b;
+        }
     </style>
 </head>
 <body>
@@ -86,6 +101,6 @@
             <button type="submit">Crear Usuario</button>
         </form>
     </div>
-    <a href="/">Volver a la página principal</a>
+    <a href="{{ menu_url }}" class="back-button">Volver al Menú Principal</a>
 </body>
 </html>

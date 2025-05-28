@@ -11,10 +11,10 @@ from src.model.result_model import ClusteringResult
 
 app = Flask(__name__)
 
-# Página principal
+# Página principal (menú)
 @app.route('/')
-def index():
-    return render_template('index.html')
+def menu():
+    return render_template('menu.html', menu_url=url_for('menu'))
 
 # Ruta para crear la base de datos
 @app.route('/crear_base_datos', methods=['POST'])
@@ -25,15 +25,35 @@ def crear_base_datos():
     if crear == 'yes':
         try:
             handler.create_table()
-            return render_template('index.html', mensaje="Base de datos creada exitosamente")
+            return render_template('index.html', mensaje="Base de datos creada exitosamente", menu_url=url_for('menu'))
         except Exception as e:
-            return render_template('index.html', error=f"Error al crear la base de datos: {e}")
-    return redirect(url_for('index'))
+            return render_template('index.html', error=f"Error al crear la base de datos: {e}", menu_url=url_for('menu'))
+    return redirect(url_for('menu'))
+
+# Ruta para subir y procesar archivo CSV
+@app.route('/subir_archivo', methods=['GET', 'POST'])
+def subir_archivo():
+    if request.method == 'POST':
+        if 'archivo' not in request.files:
+            return "No se subió ningún archivo", 400
+
+        archivo = request.files['archivo']
+        if archivo.filename == '':
+            return "Nombre de archivo vacío", 400
+
+        try:
+            df = pd.read_csv(archivo)
+            columnas = list(df.columns)
+            filas = df.head(5).values.tolist()
+            return render_template('resultados.html', columnas=columnas, resultados=filas, menu_url=url_for('menu'))
+        except Exception as e:
+            return f"Error al procesar el archivo: {e}", 500
+    return render_template('index.html', menu_url=url_for('menu'))
 
 # Página con formulario para buscar
 @app.route('/buscar', methods=['GET'])
 def buscar():
-    return render_template('buscar.html')
+    return render_template('buscar.html', menu_url=url_for('menu'))
 
 # Ruta para petición desde JavaScript (fetch)
 @app.route('/api/buscar', methods=['GET'])
@@ -81,7 +101,7 @@ def lista():
             except Exception as e:
                 return f"Error al buscar el resultado: {e}", 500
 
-    return render_template("lista.html", result=result, result_id=result_id, results_list=results_list)
+    return render_template("lista.html", result=result, result_id=result_id, results_list=results_list, menu_url=url_for('menu'))
 
 # Procesamiento del archivo CSV
 @app.route('/resultados', methods=['POST'])
@@ -98,7 +118,7 @@ def procesar_archivo():
         df = pd.read_csv(archivo)
         columnas = list(df.columns)
         filas = df.head(5).values.tolist()
-        return render_template('resultados.html', columnas=columnas, resultados=filas)
+        return render_template('resultados.html', columnas=columnas, resultados=filas, menu_url=url_for('menu'))
     except Exception as e:
         return f"Error al procesar el archivo: {e}", 500
 
@@ -135,7 +155,6 @@ def modificar():
             # Convertir coordinates a un formato compatible con PostgreSQL array
             coordinates = request.form.get('coordinates')
             if coordinates:
-                # Remover corchetes y espacios, y convertir a formato de array PostgreSQL
                 coordinates = coordinates.strip('[]').replace(' ', '')
                 coordinates = '{' + coordinates + '}'
             else:
@@ -162,15 +181,17 @@ def modificar():
             error = f"Error al actualizar el resultado: {e}"
 
         # Recargar los datos actuales para mostrar en el formulario en caso de error
-        if error or not updated_result:
-            if result_id:
-                original_result = handler.get_result_by_id(result_id)
-            else:
-                original_result = None
+        if error:
             result = handler.get_result_by_id(result_id)
 
-    return render_template('modificar.html', result=result, original_result=original_result, updated_result=updated_result, error=error)
+    return render_template('modificar.html', result=result, original_result=original_result, updated_result=updated_result, error=error, menu_url=url_for('menu'))
 
+# Ruta para mostrar el formulario de crear usuario
+@app.route('/crear_usuario', methods=['GET'])
+def show_crear_usuario():
+    return render_template('crear_usuario.html', menu_url=url_for('menu'))
+
+# Ruta para procesar la creación de un usuario
 @app.route('/crear_usuario', methods=['POST'])
 def crear_usuario():
     handler = ResultsController()
@@ -208,15 +229,11 @@ def crear_usuario():
         # Guardar el nuevo resultado usando el controlador
         success = handler.create_result(clustering_result)
         if success:
-            return redirect(url_for('index'))
+            return redirect(url_for('menu'))
         else:
             return "Error al crear el usuario", 500
     except Exception as e:
         return f"Error al crear el usuario: {e}", 500
-
-@app.route('/crear_usuario', methods=['GET'])
-def show_crear_usuario():
-    return render_template('crear_usuario.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
