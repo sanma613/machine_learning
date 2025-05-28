@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import sys
+import json
 
 sys.path.append('src')
 sys.path.append('src/controller')
@@ -117,12 +118,21 @@ def modificar():
             if not original_result:
                 return "No se encontró un resultado con ese ID", 404
 
+            # Convertir coordinates a un formato compatible con PostgreSQL array
+            coordinates = request.form.get('coordinates')
+            if coordinates:
+                # Remover corchetes y espacios, y convertir a formato de array PostgreSQL
+                coordinates = coordinates.strip('[]').replace(' ', '')
+                coordinates = '{' + coordinates + '}'
+            else:
+                coordinates = '{}'
+
             clustering_result = ClusteringResult(
                 id=result_id,
                 title=request.form.get('title'),
                 n_clusters=int(request.form.get('n_clusters')),
                 used_iterations=int(request.form.get('used_iterations')),
-                coordinates=request.form.get('coordinates'),
+                coordinates=coordinates,
                 assigned_cluster=int(request.form.get('assigned_cluster')) if request.form.get('assigned_cluster') else None,
                 is_centroid='is_centroid' in request.form,
                 centroid_label=request.form.get('centroid_label')
