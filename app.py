@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 import pandas as pd
 import sys
 import json
@@ -15,6 +15,20 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# Ruta para crear la base de datos
+@app.route('/crear_base_datos', methods=['POST'])
+def crear_base_datos():
+    handler = ResultsController()
+    crear = request.form.get('crear')
+    
+    if crear == 'yes':
+        try:
+            handler.create_table()
+            return render_template('index.html', mensaje="Base de datos creada exitosamente")
+        except Exception as e:
+            return render_template('index.html', error=f"Error al crear la base de datos: {e}")
+    return redirect(url_for('index'))
 
 # Página con formulario para buscar
 @app.route('/buscar', methods=['GET'])
@@ -148,15 +162,14 @@ def modificar():
             error = f"Error al actualizar el resultado: {e}"
 
         # Recargar los datos actuales para mostrar en el formulario en caso de error
-        if error:
+        if error or not updated_result:
+            if result_id:
+                original_result = handler.get_result_by_id(result_id)
+            else:
+                original_result = None
             result = handler.get_result_by_id(result_id)
 
     return render_template('modificar.html', result=result, original_result=original_result, updated_result=updated_result, error=error)
-
-
-from flask import Flask, render_template, request, jsonify, redirect, url_for
-
-# ... (existing imports and code) ...
 
 @app.route('/crear_usuario', methods=['POST'])
 def crear_usuario():
@@ -200,7 +213,6 @@ def crear_usuario():
             return "Error al crear el usuario", 500
     except Exception as e:
         return f"Error al crear el usuario: {e}", 500
-    
 
 @app.route('/crear_usuario', methods=['GET'])
 def show_crear_usuario():
