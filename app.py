@@ -153,5 +153,58 @@ def modificar():
 
     return render_template('modificar.html', result=result, original_result=original_result, updated_result=updated_result, error=error)
 
+
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+
+# ... (existing imports and code) ...
+
+@app.route('/crear_usuario', methods=['POST'])
+def crear_usuario():
+    handler = ResultsController()
+    try:
+        # Obtener datos del formulario
+        title = request.form.get('title')
+        n_clusters = int(request.form.get('n_clusters'))
+        used_iterations = int(request.form.get('used_iterations'))
+        
+        # Manejar coordenadas
+        coordinates = request.form.get('coordinates')
+        if coordinates:
+            coordinates = coordinates.strip('[]').replace(' ', '')
+            coordinates = '{' + coordinates + '}'
+        else:
+            coordinates = '{}'
+
+        assigned_cluster = request.form.get('assigned_cluster')
+        assigned_cluster = int(assigned_cluster) if assigned_cluster else None
+        is_centroid = 'is_centroid' in request.form
+        centroid_label = request.form.get('centroid_label')
+
+        # Crear un nuevo ClusteringResult
+        clustering_result = ClusteringResult(
+            id=None,  # El ID será asignado por la base de datos
+            title=title,
+            n_clusters=n_clusters,
+            used_iterations=used_iterations,
+            coordinates=coordinates,
+            assigned_cluster=assigned_cluster,
+            is_centroid=is_centroid,
+            centroid_label=centroid_label
+        )
+
+        # Guardar el nuevo resultado usando el controlador
+        success = handler.create_result(clustering_result)
+        if success:
+            return redirect(url_for('index'))
+        else:
+            return "Error al crear el usuario", 500
+    except Exception as e:
+        return f"Error al crear el usuario: {e}", 500
+    
+
+@app.route('/crear_usuario', methods=['GET'])
+def show_crear_usuario():
+    return render_template('crear_usuario.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

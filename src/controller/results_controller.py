@@ -2,20 +2,18 @@ import psycopg2 as pg
 from typing import Optional, List, Dict
 import sys
 from contextlib import contextmanager
-import psycopg2
 
 sys.path.append(".")
 sys.path.append("src")
 sys.path.append('model')
 import SecretConfig
-#from model.result_model import ClusteringResult
 from src.model.result_model import ClusteringResult
 
 class ResultsController:
     def __init__(self):
         """Inicializa la conexión a la base de datos utilizando la URL de conexión de SecretConfig."""
         self.db_host = SecretConfig.PGHOST
-        self.db_databse = SecretConfig.PGDATABASE
+        self.db_database = SecretConfig.PGDATABASE
         self.db_user = SecretConfig.PGUSER
         self.db_password = SecretConfig.PGPASSWORD
         self.db_port = SecretConfig.PGPORT
@@ -25,7 +23,13 @@ class ResultsController:
         """Método privado para gestionar la conexión a la base de datos de forma segura."""
         connection = None
         try:
-            connection = pg.connect(database=self.db_databse, user=self.db_user, password=self.db_password, host=self.db_host, port=self.db_port)
+            connection = pg.connect(
+                database=self.db_database,
+                user=self.db_user,
+                password=self.db_password,
+                host=self.db_host,
+                port=self.db_port
+            )
             yield connection
         except pg.Error as e:
             if connection:
@@ -61,8 +65,20 @@ class ResultsController:
             print(f"Error al eliminar la tabla: {e}")
             raise
 
+    def create_result(self, clustering_result: ClusteringResult) -> bool:
+        """Crea un nuevo resultado en la tabla 'clustering_results' y retorna True si tiene éxito."""
+        if not isinstance(clustering_result, ClusteringResult):
+            raise TypeError("El parámetro debe ser una instancia de ClusteringResult")
+
+        try:
+            inserted_id = self.insert_result(clustering_result)
+            return inserted_id is not None
+        except pg.Error as e:
+            print(f"Error al crear el resultado: {e}")
+            raise
+
     def insert_result(self, clustering_result: ClusteringResult) -> int:
-        """Inserta un nuevo resultado en la tabla 'clustering_results'."""
+        """Inserta un nuevo resultado en la tabla 'clustering_results' y retorna el ID generado."""
         if not isinstance(clustering_result, ClusteringResult):
             raise TypeError("El parámetro debe ser una instancia de ClusteringResult")
             
@@ -102,10 +118,10 @@ class ResultsController:
         except pg.Error as e:
             print(f"Error al insertar resultado: {e}")
             raise
-    
+
     def get_result_by_id(self, result_id: int) -> Optional[ClusteringResult]:
         """Obtiene un resultado específico por su ID."""
-        if not isinstance(result_id, int) and result_id <= 0:
+        if not isinstance(result_id, int) or result_id <= 0:
             raise ValueError("El ID debe ser un número entero positivo")
             
         try:
@@ -134,11 +150,12 @@ class ResultsController:
                     )
                 return None
         except pg.Error as e:
+            print(f"Error al obtener resultado por ID: {e}")
             raise
 
     def update_result(self, result_id: int, clustering_result: ClusteringResult):
         """Actualiza un resultado existente en la tabla."""
-        if not isinstance(result_id, int) and result_id <= 0:
+        if not isinstance(result_id, int) or result_id <= 0:
             raise ValueError("El ID debe ser un número entero positivo")
         if not isinstance(clustering_result, ClusteringResult):
             raise TypeError("El parámetro debe ser una instancia de ClusteringResult")
@@ -212,9 +229,19 @@ class ResultsController:
         except pg.Error as e:
             print(f"Error al listar títulos: {e}")
             raise
-    def ObtenerCursor():
-        """ Crea la conexion a la base de datos y retorna un cursor para hacer consultas """
-        connection = psycopg2.connect(database=SecretConfig.PGDATABASE, user=SecretConfig.PGUSER, password=SecretConfig.PGPASSWORD, host=SecretConfig.PGHOST, port=SecretConfig.PGPORT)
-        # Todas las instrucciones se ejecutan a tavés de un cursor
-        cursor = connection.cursor()
-        return cursor
+
+    def obtener_cursor(self):
+        """Crea la conexión a la base de datos y retorna un cursor para hacer consultas."""
+        try:
+            connection = pg.connect(
+                database=self.db_database,
+                user=self.db_user,
+                password=self.db_password,
+                host=self.db_host,
+                port=self.db_port
+            )
+            cursor = connection.cursor()
+            return cursor, connection
+        except pg.Error as e:
+            print(f"Error al obtener el cursor: {e}")
+            raise
