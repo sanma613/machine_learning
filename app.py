@@ -13,8 +13,8 @@ app = Flask(__name__)
 
 # Página principal (menú)
 @app.route('/')
-def menu():
-    return render_template('menu.html', menu_url=url_for('menu'))
+def index():
+    return render_template('index.html')
 
 # Ruta para crear la base de datos
 @app.route('/crear_base_datos', methods=['POST'])
@@ -184,7 +184,7 @@ def modificar():
         if error:
             result = handler.get_result_by_id(result_id)
 
-    return render_template('modificar.html', result=result, original_result=original_result, updated_result=updated_result, error=error, menu_url=url_for('menu'))
+    return render_template('modificar.html', result=result, original_result=original_result, updated_result=updated_result, error=error)
 
 # Ruta para mostrar el formulario de crear usuario
 @app.route('/crear_usuario', methods=['GET'])
@@ -234,6 +234,7 @@ def crear_usuario():
             return "Error al crear el usuario", 500
     except Exception as e:
         return f"Error al crear el usuario: {e}", 500
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
