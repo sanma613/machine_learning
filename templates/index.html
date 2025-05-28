@@ -2,69 +2,111 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proyecto Machine Learning</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             color: #333;
             text-align: center;
-            padding: 30px;
+            padding: 40px;
+            margin: 0;
         }
 
         h1 {
             color: #2c3e50;
+            margin-bottom: 20px;
         }
 
         p {
             margin-bottom: 30px;
+            color: #666;
         }
 
-        .form-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 30px;
-            margin: 20px auto;
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 0 auto;
             width: 100%;
             max-width: 500px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
         }
 
         label {
             display: block;
             margin-bottom: 10px;
             font-weight: bold;
+            color: #2c3e50;
         }
 
-        input[type="file"] {
-            margin-bottom: 20px;
+        input[type="file"],
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
         }
 
         button {
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 12px 25px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
 
         button:hover {
             background-color: #2980b9;
         }
 
-        a {
-            display: inline-block;
+        .message {
             margin-top: 20px;
-            color: #3498db;
-            text-decoration: none;
-            font-size: 16px;
+            padding: 15px;
+            border-radius: 5px;
         }
 
-        a:hover {
-            color: #2980b9;
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
@@ -72,24 +114,46 @@
     <h1>Bienvenido al Proyecto de Machine Learning</h1>
     <p>Este proyecto implementa el algoritmo K-Means para agrupar datos.</p>
 
-    <div class="form-container">
-        <form action="/resultados" method="post" enctype="multipart/form-data">
-            <label for="archivo">Subir archivo CSV:</label>
-            <input type="file" name="archivo" id="archivo" accept=".csv" required>
-            <button type="submit">Procesar</button>
-        </form>
+    <div class="container">
+        <div class="form-section">
+            <h2>Subir Archivo CSV</h2>
+            <form action="/subir_archivo" method="post" enctype="multipart/form-data">
+                <label for="archivo">Seleccionar archivo CSV:</label>
+                <input type="file" name="archivo" id="archivo" accept=".csv" required>
+                <button type="submit">Procesar</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>Crear Base de Datos</h2>
+            {% if mensaje %}
+                <div class="message success">{{ mensaje }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="message error">{{ error }}</div>
+            {% endif %}
+            <form action="/crear_base_datos" method="post">
+                <label>¿Desea crear la base de datos?</label>
+                <input type="checkbox" name="crear" value="yes"> Sí
+                <button type="submit">Crear</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>Buscar un Usuario</h2>
+            <form action="/lista" method="POST">
+                <label for="id">Ingrese ID del usuario:</label>
+                <input type="text" name="id" id="id" placeholder="Ingrese ID del usuario" required>
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>Crear un Nuevo Usuario</h2>
+            <p><a href="{{ url_for('show_crear_usuario') }}" style="color: #3498db; text-decoration: underline;">Ir a Crear Usuario</a></p>
+        </div>
     </div>
 
-    <div class="form-container">
-        <form action="/buscar" method="get">
-            <h2>Buscar un usuario</h2>
-            <button type="submit">Buscar Usuario</button>
-        </form>
-    </div>
-
-    <div class="form-container">
-        <h2>Crear un nuevo usuario</h2>
-        <a href="/crear_usuario">Ir a Crear Usuario</a>
-    </div>
+    <a href="{{ menu_url }}" class="back-button">Volver al Menú Principal</a>
 </body>
 </html>
