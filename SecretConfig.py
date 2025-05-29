@@ -4,6 +4,3 @@ PGDATABASE='neondb'
 PGUSER='neondb_owner'
 PGPASSWORD='npg_KSCp4nfr2LQR'
 PGPORT=5432
-
-
-

@@ -20,3 +20,5 @@ __pycache__/
 .poetry/
 
 .vscode/
+
+SecretConfig.py
