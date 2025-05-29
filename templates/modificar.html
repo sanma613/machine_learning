@@ -2,92 +2,125 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Resultado</title>
+    <title>Modificar Resultado - Proyecto Machine Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            text-align: center;
+            padding: 30px;
         }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
         .form-container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
+
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
         }
+
         input[type="text"],
         input[type="number"],
         input[type="checkbox"] {
             width: 100%;
             padding: 8px;
-            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
+
         button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #3498db;
             color: white;
             border: none;
+            padding: 12px 20px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
         }
-        .result-comparison {
+
+        .back-button {
+            display: inline-block;
             margin-top: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            background-color: #f9f9f9;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
         }
+
+        .back-button:hover {
+            background-color: #c0392b;
+        }
+
         .error {
-            color: red;
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: #3c763d;
             margin-top: 10px;
         }
     </style>
 </head>
 <body>
+    <h1>Modificar Resultado</h1>
     <div class="form-container">
-        <h2>Editar Resultado</h2>
-        <form method="POST" action="{{ url_for('modificar') }}">
-            <input type="hidden" name="id" value="{{ result.id if result else '' }}">
-            <div class="form-group">
-                <label for="title">Nombre del Caso:</label>
-                <input type="text" id="title" name="title" value="{{ result.title if result else '' }}" required>
-            </div>
-            <div class="form-group">
-                <label for="n_clusters">Número de Clusters:</label>
-                <input type="number" id="n_clusters" name="n_clusters" value="{{ result.n_clusters if result else '' }}" required>
-            </div>
-            <div class="form-group">
-                <label for="used_iterations">Iteraciones Usadas:</label>
-                <input type="number" id="used_iterations" name="used_iterations" value="{{ result.used_iterations if result else '' }}" required>
-            </div>
-            <div class="form-group">
-                <label for="coordinates">Coordenadas (JSON):</label>
-                <input type="text" id="coordinates" name="coordinates" value="{{ result.coordinates if result else '' }}">
-            </div>
-            <div class="form-group">
-                <label for="assigned_cluster">Cluster Asignado:</label>
-                <input type="number" id="assigned_cluster" name="assigned_cluster" value="{{ result.assigned_cluster if result else '' }}">
-            </div>
-            <div class="form-group">
-                <label for="is_centroid">¿Es Centroide?</label>
-                <input type="checkbox" id="is_centroid" name="is_centroid" {{ 'checked' if result and result.is_centroid else '' }}>
-            </div>
-            <div class="form-group">
-                <label for="centroid_label">Etiqueta de Centroide:</label>
-                <input type="text" id="centroid_label" name="centroid_label" value="{{ result.centroid_label if result else '' }}">
-            </div>
-            <button type="submit">Actualizar Resultado</button>
+        <form method="post">
+            <input type="hidden" name="id" value="{{ result_id if result_id else (result.id if result else '') }}">
+            <label for="title">Título:</label>
+            <input type="text" name="title" id="title" value="{{ result.title if result else '' }}" required>
+            <label for="n_clusters">Número de Clústers:</label>
+            <input type="number" name="n_clusters" id="n_clusters" value="{{ result.n_clusters if result else '' }}" required>
+            <label for="used_iterations">Iteraciones Usadas:</label>
+            <input type="number" name="used_iterations" id="used_iterations" value="{{ result.used_iterations if result else '' }}" required>
+            <label for="coordinates">Coordenadas (formato: x,y):</label>
+            <input type="text" name="coordinates" id="coordinates" value="{{ result.coordinates.strip('{}') if result and result.coordinates else '' }}">
+            <label for="assigned_cluster">Clúster Asignado:</label>
+            <input type="number" name="assigned_cluster" id="assigned_cluster" value="{{ result.assigned_cluster if result.assigned_cluster else '' }}">
+            <label for="is_centroid">¿Es Centroid?</label>
+            <input type="checkbox" name="is_centroid" id="is_centroid" {% if result and result.is_centroid %}checked{% endif %}>
+            <label for="centroid_label">Etiqueta de Centroid:</label>
+            <input type="text" name="centroid_label" id="centroid_label" value="{{ result.centroid_label if result.centroid_label else '' }}">
+            <button type="submit">Guardar Cambios</button>
         </form>
-
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        {% if updated_result %}
+            <h2>Resultado Actualizado</h2>
+            <p class="success">Los datos se han actualizado correctamente.</p>
+            <p><strong>ID:</strong> {{ updated_result.id }}</p>
+            <p><strong>Título:</strong> {{ updated_result.title }}</p>
+            <p><strong>Número de Clústers:</strong> {{ updated_result.n_clusters }}</p>
+            <p><strong>Iteraciones Usadas:</strong> {{ updated_result.used_iterations }}</p>
+            <p><strong>Coordenadas:</strong> {{ updated_result.coordinates }}</p>
+            <p><strong>Clúster Asignado:</strong> {{ updated_result.assigned_cluster if updated_result.assigned_cluster else 'No asignado' }}</p>
+            <p><strong>¿Es Centroid?:</strong> {{ 'Sí' if updated_result.is_centroid else 'No' }}</p>
+            <p><strong>Etiqueta de Centroid:</strong> {{ updated_result.centroid_label if updated_result.centroid_label else 'N/A' }}</p>
+        {% endif %}
     </div>
+    <a href="{{ menu_url }}" class="back-button">Volver al Menú Principal</a>
 </body>
 </html>

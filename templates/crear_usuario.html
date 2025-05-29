@@ -2,59 +2,80 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Usuario - Proyecto Machine Learning</title>
+    <title>Crear Nuevo Usuario - Proyecto Machine Learning</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             color: #333;
             text-align: center;
-            padding: 30px;
+            padding: 40px;
+            margin: 0;
         }
 
         h1 {
             color: #2c3e50;
+            margin-bottom: 20px;
         }
 
         .form-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 30px;
-            margin: 20px auto;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 0 auto;
             width: 100%;
             max-width: 500px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
         label {
             display: block;
             margin-bottom: 10px;
             font-weight: bold;
+            color: #2c3e50;
         }
 
         input[type="text"],
         input[type="number"],
         input[type="checkbox"] {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            font-size: 16px;
         }
 
         button {
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 12px 25px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
 
         button:hover {
             background-color: #2980b9;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
@@ -63,29 +84,22 @@
     <div class="form-container">
         <form action="/crear_usuario" method="post">
             <label for="title">Título:</label>
-            <input type="text" name="title" id="title" required>
-
-            <label for="n_clusters">Número de Clusters:</label>
-            <input type="number" name="n_clusters" id="n_clusters" required>
-
+            <input type="text" name="title" id="title" placeholder="Título del resultado" required>
+            <label for="n_clusters">Número de Clústers:</label>
+            <input type="number" name="n_clusters" id="n_clusters" placeholder="Ejemplo: 3" required>
             <label for="used_iterations">Iteraciones Usadas:</label>
-            <input type="number" name="used_iterations" id="used_iterations" required>
-
+            <input type="number" name="used_iterations" id="used_iterations" placeholder="Ejemplo: 10" required>
             <label for="coordinates">Coordenadas (formato: x,y):</label>
             <input type="text" name="coordinates" id="coordinates" placeholder="Ejemplo: 1,2">
-
-            <label for="assigned_cluster">Cluster Asignado:</label>
-            <input type="number" name="assigned_cluster" id="assigned_cluster">
-
+            <label for="assigned_cluster">Clúster Asignado:</label>
+            <input type="number" name="assigned_cluster" id="assigned_cluster" placeholder="Ejemplo: 1">
             <label for="is_centroid">¿Es Centroid?</label>
             <input type="checkbox" name="is_centroid" id="is_centroid">
-
             <label for="centroid_label">Etiqueta de Centroid:</label>
-            <input type="text" name="centroid_label" id="centroid_label">
-
-            <button type="submit">Crear Usuario</button>
+            <input type="text" name="centroid_label" id="centroid_label" placeholder="Etiqueta (opcional)">
+            <button type="submit">Crear</button>
         </form>
     </div>
-    <a href="/">Volver a la página principal</a>
+    <a href="{{ menu_url }}" class="back-button">Volver al Menú Principal</a>
 </body>
 </html>

@@ -7,63 +7,58 @@
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             color: #333;
             text-align: center;
-            padding: 30px;
+            padding: 40px;
+            margin: 0;
         }
 
         h1 {
             color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 30px;
+            color: #666;
         }
 
         .menu-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 30px;
-            margin: 20px auto;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 0 auto;
             width: 100%;
             max-width: 500px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .menu-item {
-            margin: 15px 0;
-        }
-
-        a {
-            display: inline-block;
+        .menu-button {
+            display: block;
             background-color: #3498db;
             color: white;
-            padding: 12px 20px;
+            padding: 12px 25px;
             border-radius: 5px;
             text-decoration: none;
             font-size: 16px;
+            margin: 10px 0;
+            transition: background-color 0.3s;
         }
 
-        a:hover {
+        .menu-button:hover {
             background-color: #2980b9;
         }
     </style>
 </head>
 <body>
-    <h1>Bienvenido al Proyecto de Machine Learning</h1>
+    <h1>Menú Principal</h1>
+    <p>Seleccione una opción para continuar:</p>
     <div class="menu-container">
-        <div class="menu-item">
-            <a href="{{ url_for('subir_archivo') }}">Subir Archivo CSV</a>
-        </div>
-        <div class="menu-item">
-            <a href="{{ url_for('buscar') }}">Buscar Usuario</a>
-        </div>
-        <div class="menu-item">
-            <a href="{{ url_for('show_crear_usuario') }}">Crear Usuario</a>
-        </div>
-        <div class="menu-item">
-            <a href="{{ url_for('lista') }}">Lista de Resultados</a>
-        </div>
-        <div class="menu-item">
-            <a href="{{ url_for('modificar') }}">Modificar Resultado</a>
-        </div>
+        <a href="{{ url_for('subir_archivo') }}" class="menu-button">Subir Archivo CSV</a>
+        <a href="{{ url_for('buscar') }}" class="menu-button">Buscar Resultado</a>
+        <a href="{{ url_for('lista') }}" class="menu-button">Lista de Resultados</a>
+        <a href="{{ url_for('show_crear_usuario') }}" class="menu-button">Crear Nuevo Usuario</a>
     </div>
 </body>
 </html>

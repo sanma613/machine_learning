@@ -153,7 +153,7 @@ class ResultsController:
             print(f"Error al obtener resultado por ID: {e}")
             raise
 
-    def update_result(self, result_id: int, clustering_result: ClusteringResult):
+    def update_result(self, result_id: int, clustering_result: ClusteringResult) -> bool:
         """Actualiza un resultado existente en la tabla."""
         if not isinstance(result_id, int) or result_id <= 0:
             raise ValueError("El ID debe ser un número entero positivo")
@@ -194,9 +194,12 @@ class ResultsController:
                 ))
                 
                 connection.commit()
+                # Verificar si se actualizó alguna fila
+                success = cursor.rowcount > 0
                 cursor.close()
-                return cursor.rowcount > 0
+                return success
         except pg.Error as e:
+            connection.rollback()
             print(f"Error al actualizar resultado: {e}")
             raise
 

@@ -2,108 +2,149 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Resultados</title>
+    <title>Lista de Resultados - Proyecto Machine Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            text-align: center;
+            padding: 40px;
+            margin: 0;
         }
+
+        h1, h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
         .container {
-            max-width: 800px;
-            margin: auto;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
-        .form-group {
-            margin-bottom: 15px;
+
+        .form-section {
+            margin-bottom: 30px;
         }
+
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
         }
+
         input[type="text"] {
-            padding: 8px;
-            margin-top: 5px;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
         }
+
         button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #3498db;
             color: white;
             border: none;
+            padding: 12px 25px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
         }
-        table {
-            border-collapse: collapse;
-            width: 100%;
+
+        .result-list {
             margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
             text-align: left;
         }
-        th {
-            background-color: #f2f2f2;
+
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
         }
-        a {
-            color: #4CAF50;
+
+        .result-item a {
+            color: #3498db;
             text-decoration: none;
         }
-        a:hover {
+
+        .result-item a:hover {
             text-decoration: underline;
         }
+
         .result-details {
             margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 15px;
             border-radius: 5px;
+            background-color: #f2f2f2;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
 <body>
+    <h1>Lista de Resultados</h1>
     <div class="container">
-        <h2>Consultar Resultado por ID</h2>
-        <form method="POST" action="{{ url_for('lista') }}">
-            <div class="form-group">
-                <label for="id">ID:</label>
-                <input type="text" id="id" name="id" value="{{ result_id or '' }}">
+        <div class="form-section">
+            <form method="post">
+                <label for="id">Buscar por ID:</label>
+                <input type="text" name="id" id="id" placeholder="Ingrese el ID del resultado">
                 <button type="submit">Buscar</button>
-            </div>
-        </form>
+            </form>
+        </div>
+
+        <div class="result-list">
+            <h2>Todos los Resultados</h2>
+            {% if results_list %}
+                {% for item in results_list %}
+                    <div class="result-item">
+                        ID: {{ item.id }} - Título: <a href="{{ url_for('modificar', id=item.id) }}">{{ item.title }}</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No se encontraron resultados.</p>
+            {% endif %}
+        </div>
 
         {% if result %}
             <div class="result-details">
-                <h3>Resultado:</h3>
-                <p>ID: {{ result.id }}</p>
-                <p>Título: {{ result.title }}</p>
-                <p>Número de Clusters: {{ result.n_clusters }}</p>
-                <p>Iteraciones Usadas: {{ result.used_iterations }}</p>
-                <p>Coordenadas: {{ result.coordinates }}</p>
-                <p>Cluster Asignado: {{ result.assigned_cluster }}</p>
-                <p>Es Centroide: {{ 'Sí' if result.is_centroid else 'No' }}</p>
-                <p>Etiqueta del Centroide: {{ result.centroid_label or "N/A" }}</p>
+                <h2>Detalles del Resultado</h2>
+                <p><strong>ID:</strong> {{ result.id }}</p>
+                <p><strong>Título:</strong> {{ result.title }}</p>
+                <p><strong>Número de Clústers:</strong> {{ result.n_clusters }}</p>
+                <p><strong>Iteraciones Usadas:</strong> {{ result.used_iterations }}</p>
+                <p><strong>Coordenadas:</strong> {{ result.coordinates }}</p>
+                <p><strong>Clúster Asignado:</strong> {{ result.assigned_cluster if result.assigned_cluster else 'No asignado' }}</p>
+                <p><strong>¿Es Centroid?:</strong> {{ 'Sí' if result.is_centroid else 'No' }}</p>
+                <p><strong>Etiqueta de Centroid:</strong> {{ result.centroid_label if result.centroid_label else 'N/A' }}</p>
             </div>
-        {% elif result is not none %}
-            <p>No se encontró el resultado con ese ID.</p>
         {% endif %}
-
-        <h3>Todos los Resultados</h3>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Nombre Caso</th>
-                <th>Acciones</th>
-            </tr>
-            {% for item in results_list %}
-            <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.title }}</td>
-                <td><a href="{{ url_for('modificar', id=item.id) }}">Editar</a></td>
-            </tr>
-            {% endfor %}
-        </table>
     </div>
+    <a href="{{ menu_url }}" class="back-button">Volver al Menú Principal</a>
 </body>
 </html>
