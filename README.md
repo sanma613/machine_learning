@@ -1,3 +1,27 @@
+# 🧪 Instrucciones para ejecutar la aplicación localmente y con una base de datos en blanco
+
+_Esta parte fue creada por Andrés Gallego y Sebastián Valencia._
+
+### 🖥️ Ejecución local
+
+Para ejecutar la aplicación desde tu máquina local y asegurarte de que la base de datos esté lista desde cero:
+
+1. Asegúrate de tener PostgreSQL instalado o haber configurado una base de datos en Neon.
+
+2. Crea un archivo llamado `secret_config.py` en la raíz del proyecto con esta estructura:
+
+```python
+# secret_config.py
+PGHOST = "tu_host"
+PGDATABASE = "tu_base_de_datos"
+PGUSER = "tu_usuario"
+PGPASSWORD = "tu_contraseña"
+PGPORT = "puerto"  # normalmente 5432
+
+
+
+
+
 # Segmentación Socioeconómica de Países usando K-Means Clustering
 
 **Autores:**

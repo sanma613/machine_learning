@@ -248,3 +248,6 @@ class ResultsController:
         except pg.Error as e:
             print(f"Error al obtener el cursor: {e}")
             raise
+
+
+

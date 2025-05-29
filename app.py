@@ -30,6 +30,22 @@ def crear_base_datos():
             return render_template('index.html', error=f"Error al crear la base de datos: {e}", menu_url=url_for('menu'))
     return redirect(url_for('menu'))
 
+# Nueva ruta para crear la tabla directamente desde el menú
+@app.route('/crear_tabla', methods=['GET', 'POST'])
+def crear_tabla():
+    handler = ResultsController()
+    mensaje = None
+    error = None
+
+    if request.method == 'POST':
+        try:
+            handler.create_table()
+            mensaje = "Tabla creada exitosamente en la base de datos de Neon.tech."
+        except Exception as e:
+            error = f"Error al crear la tabla: {e}"
+
+    return render_template('crear_tabla.html', mensaje=mensaje, error=error, menu_url=url_for('menu'))
+
 # Ruta para subir y procesar archivo CSV
 @app.route('/subir_archivo', methods=['GET', 'POST'])
 def subir_archivo():
