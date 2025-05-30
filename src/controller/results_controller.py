@@ -109,7 +109,6 @@ class ResultsController:
                     result["centroid_label"]
                 ))
 
-                # Obtener el ID generado
                 inserted_id = cursor.fetchone()[0]
                 connection.commit()
                 cursor.close()
@@ -167,9 +166,12 @@ class ResultsController:
                 # Verificar si el resultado existe
                 cursor.execute("SELECT id FROM clustering_results WHERE id = %s", (result_id,))
                 if cursor.fetchone() is None:
-                    raise ValueError(f"No existe un resultado con el ID {result_id}")
+                    print(f"No se encontró un resultado con el ID {result_id}")
+                    return False
                 
                 new_data = clustering_result.to_dict()
+                print(f"Actualizando resultado con ID {result_id}: {new_data}")  # Debugging
+                
                 query = """
                 UPDATE clustering_results SET
                     title = %s,
@@ -194,13 +196,14 @@ class ResultsController:
                 ))
                 
                 connection.commit()
-                # Verificar si se actualizó alguna fila
                 success = cursor.rowcount > 0
+                print(f"Filas actualizadas: {cursor.rowcount}, Éxito: {success}")  # Debugging
                 cursor.close()
                 return success
         except pg.Error as e:
-            connection.rollback()
             print(f"Error al actualizar resultado: {e}")
+            if 'connection' in locals():
+                connection.rollback()
             raise
 
     def delete_result(self, result_id: int) -> bool:
@@ -248,6 +251,3 @@ class ResultsController:
         except pg.Error as e:
             print(f"Error al obtener el cursor: {e}")
             raise
-
-
-
