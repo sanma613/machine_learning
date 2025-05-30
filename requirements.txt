@@ -1,29 +1,4 @@
-﻿certifi
-charset-normalizer
-contourpy
-cycler
-docutils
-dotenv
-filetype
-fonttools
-idna
-Kivy
-kiwisolver
-matplotlib
-numpy
-packaging
-pandas
-pillow
-psycopg2
-Pygments
-pyparsing
-pypiwin32
-python-dateutil
-python-dotenv
-pytz
-pywin32
-requests
-six
-tzdata
-urllib3
-flask
+flask==2.0.1
+pandas==1.3.5
+# Elimina o comenta pywin32
+# pywin32==XXX
