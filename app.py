@@ -118,7 +118,6 @@ def lista():
                 return f"Error al buscar el resultado: {e}", 500
 
     return render_template("lista.html", result=result, result_id=result_id, results_list=results_list, menu_url=url_for('menu'))
-
 # Procesamiento del archivo CSV
 @app.route('/resultados', methods=['POST'])
 def procesar_archivo():
@@ -138,81 +137,82 @@ def procesar_archivo():
     except Exception as e:
         return f"Error al procesar el archivo: {e}", 500
 
-@app.route('/modificar', methods=['GET', 'POST'])
-def modificar():
+# Ruta para modificar un usuario
+@app.route('/modificar_usuario', methods=['GET', 'POST'])
+def modificar_usuario():
     handler = ResultsController()
     result = None
-    original_result = None
-    updated_result = None
     error = None
     result_id = None
+    formatted_coordinates = ''
 
-    # Manejar solicitud GET (mostrar formulario con datos actuales)
     if request.method == 'GET':
         result_id = request.args.get('id')
-        if result_id:
-            try:
-                result_id = int(result_id)
-                result = handler.get_result_by_id(result_id)
-                if not result:
-                    return "No se encontró un resultado con ese ID", 404
-            except ValueError:
-                return "ID inválido", 400
-            except Exception as e:
-                return f"Error al cargar el resultado: {e}", 500
+        if not result_id:
+            error = "No se proporcionó un ID. Por favor, seleccione un resultado desde la lista."
+            return redirect(url_for('lista'))
+        try:
+            result_id = int(result_id)
+            result = handler.get_result_by_id(result_id)
+            if not result:
+                error = f"No se encontró un resultado con el ID {result_id}"
+                return redirect(url_for('lista'))
+            # Format coordinates list to string (e.g., "[1.0, 2.0, 3.0, 4.0]" -> "1.0,2.0,3.0,4.0")
+            if result.coordinates and isinstance(result.coordinates, list):
+                formatted_coordinates = ','.join(map(str, result.coordinates))
+        except ValueError:
+            error = "ID inválido, debe ser un número entero"
+            return redirect(url_for('lista'))
+        except Exception as e:
+            error = f"Error al cargar el resultado: {e}"
+            return redirect(url_for('lista'))
 
-    # Manejar solicitud POST (actualizar datos)
     if request.method == 'POST':
         result_id = request.form.get('id')
-        if result_id:
-            try:
-                result_id = int(result_id)
-                original_result = handler.get_result_by_id(result_id)
-                if not original_result:
-                    return "No se encontró un resultado con ese ID", 404
+        if not result_id:
+            error = "No se proporcionó un ID para actualizar. Por favor, intente de nuevo desde la lista."
+            return redirect(url_for('lista'))
+        try:
+            result_id = int(result_id)
+            result = handler.get_result_by_id(result_id)
+            if not result:
+                error = f"No se encontró un resultado con el ID {result_id}"
+                return redirect(url_for('lista'))
 
-                # Convertir coordinates a un formato compatible con PostgreSQL array
-                coordinates = request.form.get('coordinates')
-                if coordinates:
-                    coordinates = coordinates.strip('[]').replace(' ', '')
-                    coordinates = '{' + coordinates + '}'
-                else:
-                    coordinates = '{}'
+            # Procesar coordenadas
+            coordinates = request.form.get('coordinates', '')
+            if coordinates:
+                coordinates = coordinates.split(',')
+                coordinates = [float(coord.strip()) for coord in coordinates if coord.strip()]
+                coordinates = '{' + ','.join(map(str, coordinates)) + '}'
+            else:
+                coordinates = '{}'
 
-                # Crear el objeto ClusteringResult con los datos del formulario
-                clustering_result = ClusteringResult(
-                    id=result_id,
-                    title=request.form.get('title'),
-                    n_clusters=int(request.form.get('n_clusters')),
-                    used_iterations=int(request.form.get('used_iterations')),
-                    coordinates=coordinates,
-                    assigned_cluster=int(request.form.get('assigned_cluster')) if request.form.get('assigned_cluster') else None,
-                    is_centroid='is_centroid' in request.form,
-                    centroid_label=request.form.get('centroid_label')
-                )
+            # Crear el objeto ClusteringResult con los datos del formulario
+            updated_result = ClusteringResult(
+                id=result_id,
+                title=request.form.get('title'),
+                n_clusters=int(request.form.get('n_clusters')),
+                used_iterations=int(request.form.get('used_iterations')),
+                coordinates=coordinates,
+                assigned_cluster=int(request.form.get('assigned_cluster')) if request.form.get('assigned_cluster') else None,
+                is_centroid='is_centroid' in request.form,
+                centroid_label=request.form.get('centroid_label') or None
+            )
 
-                # Actualizar el resultado en la base de datos
-                success = handler.update_result(result_id, clustering_result)
-                if success:
-                    updated_result = handler.get_result_by_id(result_id)  # Obtener el estado actualizado
-                    if updated_result:
-                        # Confirmar que los datos se actualizaron correctamente
-                        if updated_result.title != clustering_result.title:
-                            error = "Los datos no se actualizaron correctamente en la base de datos."
-                    else:
-                        error = "No se pudo recuperar el resultado actualizado."
-                else:
-                    error = "No se pudo actualizar el resultado en la base de datos."
-            except ValueError as e:
-                error = f"Datos inválidos proporcionados: {e}"
-            except Exception as e:
-                error = f"Error al actualizar el resultado: {e}"
+            # Actualizar el resultado en la base de datos
+            success = handler.update_result(result_id, updated_result)
+            if success:
+                return redirect(url_for('lista'))
+            else:
+                error = "No se pudo actualizar el resultado en la base de datos"
+        except ValueError as e:
+            error = f"Datos inválidos proporcionados: {e}"
+        except Exception as e:
+            error = f"Error al actualizar el resultado: {e}"
 
-            # Recargar los datos actuales para mostrar en el formulario en caso de error
-            if error:
-                result = handler.get_result_by_id(result_id)
-
-    return render_template('modificar.html', result=result, original_result=original_result, updated_result=updated_result, error=error, result_id=result_id, menu_url=url_for('menu'))
+    return render_template('modificar.html', result=result, error=error, result_id=result_id, 
+                          formatted_coordinates=formatted_coordinates, menu_url=url_for('menu'))
 
 # Ruta para mostrar el formulario de crear usuario
 @app.route('/crear_usuario', methods=['GET'])
@@ -224,12 +224,10 @@ def show_crear_usuario():
 def crear_usuario():
     handler = ResultsController()
     try:
-        # Obtener datos del formulario
         title = request.form.get('title')
         n_clusters = int(request.form.get('n_clusters'))
         used_iterations = int(request.form.get('used_iterations'))
         
-        # Manejar coordenadas
         coordinates = request.form.get('coordinates')
         if coordinates:
             coordinates = coordinates.strip('[]').replace(' ', '')
@@ -242,9 +240,8 @@ def crear_usuario():
         is_centroid = 'is_centroid' in request.form
         centroid_label = request.form.get('centroid_label')
 
-        # Crear un nuevo ClusteringResult
         clustering_result = ClusteringResult(
-            id=None,  # El ID será asignado por la base de datos
+            id=None,
             title=title,
             n_clusters=n_clusters,
             used_iterations=used_iterations,
@@ -254,7 +251,6 @@ def crear_usuario():
             centroid_label=centroid_label
         )
 
-        # Guardar el nuevo resultado usando el controlador
         success = handler.create_result(clustering_result)
         if success:
             return redirect(url_for('menu'))

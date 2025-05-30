@@ -77,48 +77,32 @@
             color: #e74c3c;
             margin-top: 10px;
         }
-
-        .success {
-            color: #3c763d;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
     <h1>Modificar Resultado</h1>
     <div class="form-container">
-        <form method="post">
-            <input type="hidden" name="id" value="{{ result_id if result_id else (result.id if result else '') }}">
+        <p><strong>ID del Resultado:</strong> {{ result.id }}</p>
+        <form method="POST" action="{{ url_for('modificar_usuario') }}">
+            <input type="hidden" name="id" value="{{ result.id }}">
             <label for="title">Título:</label>
-            <input type="text" name="title" id="title" value="{{ result.title if result else '' }}" required>
+            <input type="text" name="title" id="title" value="{{ result.title }}" required>
             <label for="n_clusters">Número de Clústers:</label>
-            <input type="number" name="n_clusters" id="n_clusters" value="{{ result.n_clusters if result else '' }}" required>
+            <input type="number" name="n_clusters" id="n_clusters" value="{{ result.n_clusters }}" required>
             <label for="used_iterations">Iteraciones Usadas:</label>
-            <input type="number" name="used_iterations" id="used_iterations" value="{{ result.used_iterations if result else '' }}" required>
+            <input type="number" name="used_iterations" id="used_iterations" value="{{ result.used_iterations }}" required>
             <label for="coordinates">Coordenadas (formato: x,y):</label>
-            <input type="text" name="coordinates" id="coordinates" value="{{ result.coordinates.strip('{}') if result and result.coordinates else '' }}">
+            <input type="text" name="coordinates" id="coordinates" value="{{ formatted_coordinates if formatted_coordinates else '' }}" placeholder="Ejemplo: 1.0,2.0">
             <label for="assigned_cluster">Clúster Asignado:</label>
             <input type="number" name="assigned_cluster" id="assigned_cluster" value="{{ result.assigned_cluster if result.assigned_cluster else '' }}">
             <label for="is_centroid">¿Es Centroid?</label>
-            <input type="checkbox" name="is_centroid" id="is_centroid" {% if result and result.is_centroid %}checked{% endif %}>
+            <input type="checkbox" name="is_centroid" id="is_centroid" {% if result.is_centroid %}checked{% endif %}>
             <label for="centroid_label">Etiqueta de Centroid:</label>
             <input type="text" name="centroid_label" id="centroid_label" value="{{ result.centroid_label if result.centroid_label else '' }}">
             <button type="submit">Guardar Cambios</button>
         </form>
         {% if error %}
             <p class="error">{{ error }}</p>
-        {% endif %}
-        {% if updated_result %}
-            <h2>Resultado Actualizado</h2>
-            <p class="success">Los datos se han actualizado correctamente.</p>
-            <p><strong>ID:</strong> {{ updated_result.id }}</p>
-            <p><strong>Título:</strong> {{ updated_result.title }}</p>
-            <p><strong>Número de Clústers:</strong> {{ updated_result.n_clusters }}</p>
-            <p><strong>Iteraciones Usadas:</strong> {{ updated_result.used_iterations }}</p>
-            <p><strong>Coordenadas:</strong> {{ updated_result.coordinates }}</p>
-            <p><strong>Clúster Asignado:</strong> {{ updated_result.assigned_cluster if updated_result.assigned_cluster else 'No asignado' }}</p>
-            <p><strong>¿Es Centroid?:</strong> {{ 'Sí' if updated_result.is_centroid else 'No' }}</p>
-            <p><strong>Etiqueta de Centroid:</strong> {{ updated_result.centroid_label if updated_result.centroid_label else 'N/A' }}</p>
         {% endif %}
     </div>
     <a href="{{ menu_url }}" class="back-button">Volver al Menú Principal</a>

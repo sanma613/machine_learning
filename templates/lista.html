@@ -10,141 +10,90 @@
             background-color: #ffffff;
             color: #333;
             text-align: center;
-            padding: 40px;
-            margin: 0;
+            padding: 30px;
         }
 
         h1, h2 {
             color: #2c3e50;
-            margin-bottom: 20px;
         }
 
-        .container {
+        .results-container {
             background-color: #f9f9f9;
-            border-radius: 15px;
-            padding: 40px;
-            margin: 0 auto;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px auto;
             width: 100%;
             max-width: 600px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        .result-list {
-            margin-top: 20px;
-            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .result-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            margin: 10px 0;
         }
 
         .result-item a {
             color: #3498db;
             text-decoration: none;
+            margin-left: 10px;
         }
 
         .result-item a:hover {
+            color: #2980b9;
             text-decoration: underline;
-        }
-
-        .result-details {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: #f2f2f2;
         }
 
         .back-button {
             display: inline-block;
-            margin-top: 30px;
+            margin-top: 20px;
             background-color: #e74c3c;
             color: white;
-            padding: 12px 25px;
+            padding: 12px 20px;
             border-radius: 5px;
             text-decoration: none;
             font-size: 16px;
-            transition: background-color 0.3s;
         }
 
         .back-button:hover {
             background-color: #c0392b;
         }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>Lista de Resultados</h1>
-    <div class="container">
-        <div class="form-section">
-            <form method="post">
-                <label for="id">Buscar por ID:</label>
-                <input type="text" name="id" id="id" placeholder="Ingrese el ID del resultado">
-                <button type="submit">Buscar</button>
-            </form>
-        </div>
-
-        <div class="result-list">
-            <h2>Todos los Resultados</h2>
-            {% if results_list %}
-                {% for item in results_list %}
-                    <div class="result-item">
-                        ID: {{ item.id }} - Título: <a href="{{ url_for('modificar', id=item.id) }}">{{ item.title }}</a>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>No se encontraron resultados.</p>
-            {% endif %}
-        </div>
-
+    <div class="results-container">
+        {% if results_list %}
+            {% for item in results_list %}
+                <div class="result-item">
+                    <p>ID: {{ item.id }} - Título: {{ item.title }}
+                        <a href="{{ url_for('modificar_usuario', id=item.id) }}">Modificar</a>
+                    </p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay resultados disponibles.</p>
+        {% endif %}
         {% if result %}
-            <div class="result-details">
-                <h2>Detalles del Resultado</h2>
-                <p><strong>ID:</strong> {{ result.id }}</p>
-                <p><strong>Título:</strong> {{ result.title }}</p>
-                <p><strong>Número de Clústers:</strong> {{ result.n_clusters }}</p>
-                <p><strong>Iteraciones Usadas:</strong> {{ result.used_iterations }}</p>
-                <p><strong>Coordenadas:</strong> {{ result.coordinates }}</p>
-                <p><strong>Clúster Asignado:</strong> {{ result.assigned_cluster if result.assigned_cluster else 'No asignado' }}</p>
-                <p><strong>¿Es Centroid?:</strong> {{ 'Sí' if result.is_centroid else 'No' }}</p>
-                <p><strong>Etiqueta de Centroid:</strong> {{ result.centroid_label if result.centroid_label else 'N/A' }}</p>
-            </div>
+            <h2>Resultado Detallado</h2>
+            <p><strong>ID:</strong> {{ result.id }}</p>
+            <p><strong>Título:</strong> {{ result.title }}</p>
+            <p><strong>Número de Clústers:</strong> {{ result.n_clusters }}</p>
+            <p><strong>Iteraciones Usadas:</strong> {{ result.used_iterations }}</p>
+            <p><strong>Coordenadas:</strong> {{ result.coordinates }}</p>
+            <p><strong>Clúster Asignado:</strong> {{ result.assigned_cluster if result.assigned_cluster else 'No asignado' }}</p>
+            <p><strong>¿Es Centroid?:</strong> {{ 'Sí' if result.is_centroid else 'No' }}</p>
+            <p><strong>Etiqueta de Centroid:</strong> {{ result.centroid_label if result.centroid_label else 'N/A' }}</p>
         {% endif %}
     </div>
+    <form method="POST">
+        <label for="id">Buscar por ID:</label>
+        <input type="number" name="id" id="id" value="{{ result_id if result_id else '' }}">
+        <button type="submit">Buscar</button>
+    </form>
     <a href="{{ menu_url }}" class="back-button">Volver al Menú Principal</a>
 </body>
 </html>
