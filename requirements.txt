@@ -5,4 +5,4 @@ pandas==2.0.3  # Versión estable reciente
 kivy
 numpy==1.24.3
 psycopg2
-gunicorn
+gunicorn==21.2.0
